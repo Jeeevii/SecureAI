@@ -15,7 +15,7 @@ if not api_key:
 # Initialize OpenAI client
 openai.api_key = api_key
 
-def analyze_file_for_vulnerabilities(file_data):
+def analyze_vulnerabilities(file_data):
     """
     Analyze a single file for vulnerabilities using an LLM.
     
