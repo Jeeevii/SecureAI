@@ -1,7 +1,7 @@
 import json
 import os
 import re
-import openai
+from openai import OpenAI
 from dotenv import load_dotenv
 
 # Load environment variables from .env file if it exists
@@ -13,7 +13,7 @@ if not api_key:
     raise ValueError("OPENAI_API_KEY environment variable not set")
 
 # Initialize OpenAI client
-openai.api_key = api_key
+client = OpenAI(api_key=api_key)
 
 def analyze_vulnerabilities(file_data):
     """
@@ -70,7 +70,7 @@ def analyze_vulnerabilities(file_data):
     
     # Call the LLM API to analyze the file
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4", # or another suitable model
             messages=[
                 {"role": "system", "content": "You are a security expert analyzing code for vulnerabilities."},
