@@ -1,24 +1,11 @@
-from fastapi import FastAPI, HTTPException
-from models import RepoRequest
-from github_scanner import fetch_repo_files
+from fastapi import FastAPI
 import uvicorn
 
 app = FastAPI()
 
 @app.post("/scan")
-async def scan_repo(request: RepoRequest):
-    repo_url = request.repo_url
-    if not repo_url.startswith("https://github.com/"):
-        raise HTTPException(status_code=400, detail="Invalid GitHub URL.")
-    
-    try:
-        files = fetch_repo_files(repo_url)
-        return {
-            "message": f"Found {len(files)} scannable files.",
-            "files": files
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+async def scan_repo(repo_url: str):
+    return {"message": f"Scanning repository at {repo_url}"}
     
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
