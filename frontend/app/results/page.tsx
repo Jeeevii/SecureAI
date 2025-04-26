@@ -1,12 +1,38 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { SecurityIssuesTable } from "@/components/security-issues-table"
-import { SummaryCards } from "@/components/summary-cards"
-import { ArrowLeft, Download, FileText } from "lucide-react"
-import Link from "next/link"
+import { Button } from "@/components/ui/button";
+import { SecurityIssuesTable } from "@/components/security-issues-table";
+import { SecurityIssue, securityIssues } from "@/components/security-issues-table"; // Import securityIssues from here
+import { SummaryCards } from "@/components/summary-cards";
+import { ArrowLeft, Download, FileText } from "lucide-react";
+import Link from "next/link";
 
 export default function ResultsPage() {
+  const downloadRaw = () => {
+    let textContent = "Security Issues Report\n\n";
+    textContent += "ID | File | Issue Type | Severity | Line Number\n";
+    textContent += "--------------------------------------------\n";
+
+    // We directly use the imported `securityIssues` here
+    securityIssues.forEach(issue => {
+      textContent += `${issue.id} | ${issue.fileName} | ${issue.issueType} | ${issue.severity} | ${issue.lineNumber}\n`;
+      textContent += `Description: ${issue.description}\n`;
+      textContent += `Code Snippet:\n${issue.codeSnippet}\n`;
+      textContent += `Suggested Fix:\n${issue.suggestedFix}\n`;
+      textContent += "\n--------------------------------------------\n";
+    });
+
+    const blob = new Blob([textContent], { type: "text/plain" });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "security_issues_report.txt";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
@@ -26,7 +52,7 @@ export default function ResultsPage() {
               <FileText className="h-4 w-4 mr-2" />
               View Raw Log
             </Button>
-            <Button className="bg-black hover:bg-gray-800 text-white">
+            <Button className="bg-black hover:bg-gray-800 text-white" onClick={downloadRaw}>
               <Download className="h-4 w-4 mr-2" />
               Download Report
             </Button>
@@ -49,9 +75,9 @@ export default function ResultsPage() {
             </div>
           </div>
 
-          <SecurityIssuesTable />
+          <SecurityIssuesTable securityIssues={securityIssues} />
         </div>
       </div>
     </div>
-  )
+  );
 }
