@@ -1,44 +1,90 @@
+"""
+get_repo_files_to_json.py
+
+Recursively lists all files in a public GitHub repository and writes their paths and sanitized contents
+into a JSON file, assigning each file a unique integer ID and stripping newline characters from content.
+
+Usage:
+    python get_repo_files_to_json.py https://github.com/owner/repo [-o output.json]
+"""
+
+import sys
+import argparse
 import requests
+import json
 from urllib.parse import urlparse
 
-class GitHubRepoLister:
-    def __init__(self, repo_url: str):
-        self.repo_url = repo_url
-        self.owner, self.repo = self._parse_url()
-        self.base_url = f"https://api.github.com/repos/{self.owner}/{self.repo}"
+def parse_github_url(url):
+    """Extract owner and repo name from a GitHub URL."""
+    parsed = urlparse(url)
+    parts = parsed.path.strip('/').split('/')
+    if len(parts) < 2:
+        raise ValueError(f"Invalid GitHub URL: {url}")
+    owner, repo = parts[0], parts[1].removesuffix('.git')
+    return owner, repo
 
-    def _parse_url(self):
-        """Extract owner and repo name from the GitHub URL."""
-        parsed = urlparse(self.repo_url)
-        parts = parsed.path.strip("/").split("/")
-        if len(parts) < 2:
-            raise ValueError("Invalid GitHub repo URL format. Expected format: https://github.com/owner/repo")
-        return parts[0], parts[1]
+def get_default_branch(owner, repo):
+    """Fetch the repository's default branch name."""
+    api = f"https://api.github.com/repos/{owner}/{repo}"
+    r = requests.get(api)
+    r.raise_for_status()
+    return r.json()['default_branch']
 
-    def _get_repo_tree(self):
-        """Get the full tree (list of files) from the repo."""
-        url = f"{self.base_url}/git/trees/main?recursive=1"  # default branch = main
-        response = requests.get(url)
-        if response.status_code != 200:
-            raise Exception(f"Failed to fetch repo tree: {response.text}")
-        return response.json()["tree"]
+def get_all_files(owner, repo, branch):
+    """
+    Use the Git Trees API with recursive=1 to get the full tree.
+    Returns a list of blobs (files) with their paths.
+    """
+    api = f"https://api.github.com/repos/{owner}/{repo}/git/trees/{branch}?recursive=1"
+    r = requests.get(api)
+    r.raise_for_status()
+    tree = r.json().get('tree', [])
+    return [item for item in tree if item['type'] == 'blob']
 
-    def list_files(self):
-        """List all files in the repo."""
-        tree = self._get_repo_tree()
-        files = [item["path"] for item in tree if item["type"] == "blob"]
-        return files
+def get_raw_content(owner, repo, branch, path):
+    """Fetch a file's raw content from raw.githubusercontent.com."""
+    raw_url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{path}"
+    r = requests.get(raw_url)
+    r.raise_for_status()
+    return r.text
 
-valid_repos = [
-    'https://github.com/Jeeevii/SlugRush',
-    'https://github.com/Jeeevii/portfolio',
-    'https://github.com/Jeeevii/Jeeevii'
-]
-# Example usage
-if __name__ == "__main__":
-    url = valid_repos[0] # example public repo
-    lister = GitHubRepoLister(url)
-    files = lister.list_files()
-    print("Files found:")
-    for f in files:
-        print(f)
+def sanitize_content(text):
+    """Remove newline characters to produce a single-line content string."""
+    return text.replace('\r\n', ' ').replace('\n', ' ').replace('\r', ' ')
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="List all files in a GitHub repo and write their sanitized contents to JSON."
+    )
+    parser.add_argument('repo_url', help="e.g. https://github.com/owner/repo")
+    parser.add_argument('-o', '--output', default='repo_files.json',
+                        help="Output JSON file path (default: repo_files.json)")
+    args = parser.parse_args()
+    try:
+        owner, repo = parse_github_url(args.repo_url)
+    except ValueError as e:
+        sys.exit(e)
+    branch = get_default_branch(owner, repo)
+    files = get_all_files(owner, repo, branch)
+    data = []
+    for idx, item in enumerate(files, start=1):
+        path = item['path']
+        try:
+            raw = get_raw_content(owner, repo, branch, path)
+            content = sanitize_content(raw)
+        except requests.HTTPError:
+            content = ''
+        data.append({
+            'id': idx,
+            'path': path,
+            'contents': content
+        })
+    try:
+        with open(args.output, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        print(f"Wrote {len(data)} file entries to {args.output}")
+    except IOError as e:
+        sys.exit(f"Error writing JSON file: {e}")
+
+if __name__ == '__main__':
+    main()
