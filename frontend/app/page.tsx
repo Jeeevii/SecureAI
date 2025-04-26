@@ -1,3 +1,5 @@
+"use client"
+
 import { GithubInput } from "@/components/github-input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Shield } from "lucide-react"

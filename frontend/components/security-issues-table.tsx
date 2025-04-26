@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp, Copy, AlertOctagon, AlertTriangle, AlertCircle } from "lucide-react"
@@ -248,9 +248,8 @@ export function SecurityIssuesTable() {
         </TableHeader>
         <TableBody>
           {securityIssues.map((issue) => (
-            <>
+            <React.Fragment key={issue.id}>
               <TableRow
-                key={issue.id}
                 className={`hover:bg-gray-50 border-gray-200 cursor-pointer ${
                   expandedRows.includes(issue.id) ? "bg-gray-50" : ""
                 }`}
@@ -278,7 +277,7 @@ export function SecurityIssuesTable() {
                 <TableCell className="text-right text-gray-700">{issue.lineNumber}</TableCell>
               </TableRow>
               {expandedRows.includes(issue.id) && (
-                <TableRow className="border-gray-200 bg-gray-50">
+                <TableRow key={`expanded-${issue.id}`} className="border-gray-200 bg-gray-50">
                   <TableCell colSpan={5} className="p-0">
                     <div className="p-4">
                       <h3 className="text-lg font-semibold text-black mb-2">{issue.issueType}</h3>
@@ -329,7 +328,7 @@ export function SecurityIssuesTable() {
                   </TableCell>
                 </TableRow>
               )}
-            </>
+            </React.Fragment>
           ))}
         </TableBody>
       </Table>
