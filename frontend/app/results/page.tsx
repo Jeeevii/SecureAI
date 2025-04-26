@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { SecurityIssuesTable } from "@/components/security-issues-table"
 import { SummaryCards } from "@/components/summary-cards"
