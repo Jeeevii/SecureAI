@@ -1,13 +1,25 @@
-"use client"
+"use client";
 
-import React, { useState } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { ChevronDown, ChevronUp, Copy, AlertOctagon, AlertTriangle, AlertCircle } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
+import React, { useState } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, ChevronUp, Copy, AlertOctagon, AlertTriangle, AlertCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
-// Mock security issues data
-const securityIssues = [
+// Assuming SecurityIssue is imported
+export interface SecurityIssue {
+  id: number;
+  fileName: string;
+  lineNumber: number;
+  issueType: string;
+  severity: "high" | "medium" | "low";
+  description: string;
+  codeSnippet: string;
+  suggestedFix: string;
+}
+
+// Dummy mock data
+export const securityIssues: SecurityIssue[] = [
   {
     id: 1,
     fileName: "app/api/generate.js",
@@ -16,25 +28,9 @@ const securityIssues = [
     severity: "high",
     description:
       "API key is hardcoded in the source code, making it vulnerable to exposure if the code is shared or leaked.",
-    codeSnippet: `const openaiApiKey = "sk-1234567890abcdefghijklmnopqrstuvwxyz";
-const response = await fetch("https://api.openai.com/v1/completions", {
-  headers: {
-    "Authorization": \`Bearer \${openaiApiKey}\`,
-    "Content-Type": "application/json"
-  },
-  // ...
-});`,
-    suggestedFix: `// Store API keys in environment variables
-const openaiApiKey = process.env.OPENAI_API_KEY;
-const response = await fetch("https://api.openai.com/v1/completions", {
-  headers: {
-    "Authorization": \`Bearer \${openaiApiKey}\`,
-    "Content-Type": "application/json"
-  },
-  // ...
-});`,
-  },
-  {
+    codeSnippet: `const openaiApiKey = "sk-1234567890abcdefghijklmnopqrstuvwxyz";`,
+    suggestedFix: `const openaiApiKey = process.env.OPENAI_API_KEY;`,
+  },{
     id: 2,
     fileName: "app/api/chat.js",
     lineNumber: 28,
@@ -190,48 +186,56 @@ export async function POST(req) {
   return new Response(JSON.stringify(response.data));
 }`,
   },
-]
+];
 
-export function SecurityIssuesTable() {
-  const [expandedRows, setExpandedRows] = useState<number[]>([])
-  const { toast } = useToast()
+export function SecurityIssuesTable({ securityIssues }: { securityIssues: SecurityIssue[] | undefined }) {
+  const [expandedRows, setExpandedRows] = useState<number[]>([]);
+  const { toast } = useToast();
 
   const toggleRow = (id: number) => {
-    setExpandedRows((prev) => (prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]))
-  }
+    setExpandedRows((prev) => (prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]));
+  };
 
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text)
+    navigator.clipboard.writeText(text);
     toast({
       title: "Copied to clipboard",
       description: "The code has been copied to your clipboard",
-    })
-  }
+    });
+  };
 
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
       case "high":
-        return <AlertOctagon className="h-5 w-5 text-red-500" />
+        return <AlertOctagon className="h-5 w-5 text-red-500" />;
       case "medium":
-        return <AlertTriangle className="h-5 w-5 text-yellow-500" />
+        return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
       case "low":
-        return <AlertCircle className="h-5 w-5 text-blue-500" />
+        return <AlertCircle className="h-5 w-5 text-blue-500" />;
       default:
-        return <AlertCircle className="h-5 w-5 text-gray-400" />
+        return <AlertCircle className="h-5 w-5 text-gray-400" />;
     }
-  }
+  };
 
   const getSeverityClass = (severity: string) => {
     switch (severity) {
       case "high":
-        return "bg-red-50 text-red-700 border-red-100"
+        return "bg-red-50 text-red-700 border-red-100";
       case "medium":
-        return "bg-yellow-50 text-yellow-700 border-yellow-100"
+        return "bg-yellow-50 text-yellow-700 border-yellow-100";
       case "low":
-        return "bg-blue-50 text-blue-700 border-blue-100"
+        return "bg-blue-50 text-blue-700 border-blue-100";
       default:
-        return "bg-gray-50 text-gray-700 border-gray-100"
+        return "bg-gray-50 text-gray-700 border-gray-100";
     }
+  };
+
+  if (!securityIssues) {
+    return (
+      <div className="text-center text-gray-500">
+        <p>No security issues to display.</p>
+      </div>
+    );
   }
 
   return (
@@ -291,8 +295,8 @@ export function SecurityIssuesTable() {
                             size="sm"
                             className="h-8 text-gray-500 hover:text-black"
                             onClick={(e) => {
-                              e.stopPropagation()
-                              copyToClipboard(issue.codeSnippet)
+                              e.stopPropagation();
+                              copyToClipboard(issue.codeSnippet);
                             }}
                           >
                             <Copy className="h-3.5 w-3.5 mr-1" />
@@ -312,8 +316,8 @@ export function SecurityIssuesTable() {
                             size="sm"
                             className="h-8 text-gray-500 hover:text-black"
                             onClick={(e) => {
-                              e.stopPropagation()
-                              copyToClipboard(issue.suggestedFix)
+                              e.stopPropagation();
+                              copyToClipboard(issue.suggestedFix);
                             }}
                           >
                             <Copy className="h-3.5 w-3.5 mr-1" />
@@ -321,7 +325,7 @@ export function SecurityIssuesTable() {
                           </Button>
                         </div>
                         <pre className="bg-gray-100 p-3 rounded-md overflow-x-auto text-sm">
-                          <code className="text-green-700">{issue.suggestedFix}</code>
+                          <code className="text-gray-800">{issue.suggestedFix}</code>
                         </pre>
                       </div>
                     </div>
@@ -333,5 +337,5 @@ export function SecurityIssuesTable() {
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
