@@ -173,8 +173,8 @@ def find_vulnerabilities(input_file, output_file=None):
 
 def main():
     """Main function to find vulnerabilities in test.json"""
-    input_file = "json/repo_files.json"
-    output_file = "json/vulnerabilities.json"
+    input_file = "json_output/repo_files.json"
+    output_file = "json_output/vulnerabilities.json"
     
     find_vulnerabilities(input_file, output_file)
     print(f"Analysis complete. Results written to {output_file}")

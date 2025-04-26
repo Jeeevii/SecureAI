@@ -1,0 +1,22 @@
+[
+  {
+    "fileName": "index.html",
+    "lineNumber": 22,
+    "issueType": "Insecure data handling",
+    "severity": "High",
+    "description": "The login form does not validate the user's credentials. Instead, it simply takes the input from the user and displays it in an alert. This means that anyone can 'log in' with any credentials.",
+    "codeSnippet": "document.getElementById('loginForm').addEventListener('submit', function(e) {\n            e.preventDefault();\n            var username = document.getElementById('username').value;\n            var password = document.getElementById('password').value;\n            alert('Logged in as ' + username);\n        });",
+    "suggestedFix": "Implement a secure server-side authentication mechanism. This could involve checking the provided username and password against a database of registered users. Also, consider using secure session management and HTTPS to protect the user's credentials during transmission.",
+    "id": 1
+  },
+  {
+    "fileName": "index.html",
+    "lineNumber": 29,
+    "issueType": "Potential cross-site scripting (XSS)",
+    "severity": "High",
+    "description": "The search function takes the user's input and directly inserts it into the page's HTML. This could allow an attacker to inject malicious scripts into the page, which would then be executed in the user's browser.",
+    "codeSnippet": "function search() {\n            var query = document.getElementById('searchBox').value;\n            document.getElementById('results').innerHTML = \"You searched for: \" + query;\n        }",
+    "suggestedFix": "Use textContent instead of innerHTML to insert the user's input into the page. This will ensure that the input is treated as text and not as HTML or JavaScript code. Alternatively, sanitize the user's input before inserting it into the page to remove any potentially harmful code.",
+    "id": 2
+  }
+]
