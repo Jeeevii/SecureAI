@@ -28,6 +28,7 @@ const securityIssues = [
 ```javascript
 [
   {
+    id: Int // unique identifier for the file
     path: String,    // Path of the file in the repository
     contents: String // Contents of the file
   }
