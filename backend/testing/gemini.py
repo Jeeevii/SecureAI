@@ -2,6 +2,8 @@ import requests
 import os
 from dotenv import load_dotenv
 
+load_dotenv()
+
 GEMINI_KEY = os.environ.get("GEMINI_API_KEY")
 MODEL = "gemini-2.0-flash"  # or "gemini-2.0-pro", depending on what you wanna test
 API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent?key={GEMINI_KEY}"
