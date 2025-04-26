@@ -155,7 +155,7 @@ def find_vulnerabilities(input_file, output_file=None):
     # Process each file in the input
     for file_info in file_data:
         print(f"Analyzing file: {file_info['path']}")
-        vulnerabilities = analyze_file_for_vulnerabilities(file_info)
+        vulnerabilities = analyze_vulnerabilities(file_info)
         all_vulnerabilities.extend(vulnerabilities)
     
     # Assign unique IDs to vulnerabilities
@@ -173,8 +173,8 @@ def find_vulnerabilities(input_file, output_file=None):
 
 def main():
     """Main function to find vulnerabilities in test.json"""
-    input_file = "/home/aryan/natsechack/SecureAI/backend/test.json"
-    output_file = "/home/aryan/natsechack/SecureAI/backend/vulnerabilities.json"
+    input_file = "json/repo_files.json"
+    output_file = "json/vulnerabilities.json"
     
     find_vulnerabilities(input_file, output_file)
     print(f"Analysis complete. Results written to {output_file}")
