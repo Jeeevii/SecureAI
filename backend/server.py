@@ -1,7 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from models import RepoRequest
 from github_scanner import fetch_repo_files
-import uvicorn
 
 app = FastAPI()
 
@@ -19,6 +17,6 @@ async def scan_repo(request: RepoRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("server:app", host="localhost", port=8000, reload=True)
