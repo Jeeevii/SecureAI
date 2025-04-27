@@ -11,19 +11,18 @@ class RepoFileFetcher:
     DEFAULT_EXTENSIONS = {
         '.py', '.pyx', '.pyd', '.pyi', '.pyc',
         '.rs', '.rlib',
-        '.html', '.htm', '.css', '.scss', '.sass', '.less',
+        '.html', '.htm', '.scss', '.sass', '.less',
         '.js', '.jsx', '.ts', '.tsx', '.vue', '.svelte',
         '.cpp', '.c', '.cc', '.cxx', '.h', '.hpp', '.hxx',
         '.java', '.kt', '.kts', '.groovy',
-        '.cs', '.vb', '.fs',
-        '.go',
+        '.cs', '.vb', '.fs', '.go',
         '.rb', '.erb', '.rake',
         '.php', '.phtml', '.php3', '.php4', '.php5',
         '.swift', '.m', '.mm',
         '.sh', '.bash', '.zsh', '.fish',
         '.yaml', '.yml', '.toml', '.xml', '.ini', '.config',
         'Dockerfile', '.dockerfile', '.dockerignore',
-        '.sql', '.graphql', '.proto',
+        '.sql', '.graphql', '.proto'
     }
     DEFAULT_IGNORE_DIRS = {'node_modules', '.git', '.md', '.pdf', '.css', '.json'}
 
