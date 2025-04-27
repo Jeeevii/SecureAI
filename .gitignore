@@ -172,4 +172,5 @@ web/.yarn/*
 .cache-loader
 
 test*.json
+repo_files.json
 vulnerabilities.json
