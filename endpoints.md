@@ -25,15 +25,17 @@ const securityIssues = [
 - **Input**: String containing the repository URL  
 - **Output**: JSON in the following format:
 
-```javascript
-[
-  {
-    id: Int // unique identifier for the file
-    path: String,    // Path of the file in the repository
-    contents: String // Contents of the file
-  }
-]
-```
+{
+  "num_files": Int
+  "files": 
+  [
+    {
+      id: Int // id that goes from 1 to n
+      path: String,    // Path of the file in the repository
+      contents: String // Contents of the file
+    }
+  ]
+}
 
 ### `find_file_vulnerabilities`
 - **Input**: 
