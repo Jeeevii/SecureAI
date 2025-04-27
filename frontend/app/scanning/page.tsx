@@ -54,6 +54,15 @@ export default function ScanningPage() {
         sessionStorage.setItem("vulnerabilities", JSON.stringify(data))
         sessionStorage.setItem("packagesVulnerabilities", JSON.stringify(data.packagesVulnerabilities || {}))
         
+        // Store malware data properly
+        // Check if malware data is available in the response
+        if (data.malware) {
+          sessionStorage.setItem("malware", JSON.stringify(data.malware))
+        } else {
+          // If there's no specific malware field, create an empty array
+          sessionStorage.setItem("malware", JSON.stringify([]))
+        }
+        
         // Mark scan as complete
         scanCompleteRef.current = true
         console.log("Vulnerabilities fetched successfully:", data)

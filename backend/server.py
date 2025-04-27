@@ -67,8 +67,7 @@ async def get_vulnerabilities(repo: RepositoryRequest = Body(...)):
 
         # Call malware detection
         print("Classifying binaries for malware...")
-        detect_malware()  # This will update the vulnerabilities file with malware results
-        
+        vulnerabilities["malware"] = detect_malware()  # This will update the vulnerabilities file with malware results
         return JSONResponse(content=vulnerabilities)
     
     except Exception as e:

@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button"
 import { SecurityIssuesTable, SecurityIssue } from "@/components/security-issues-table"
 import { PackageIssues } from "@/components/package-issues"
 import { SummaryCards } from "@/components/summary-cards"
-import { ArrowLeft, Download, Shield, Package } from "lucide-react"
+import { MalwareScanTable } from "@/components/malware-scan-table"
+import { ArrowLeft, Download, Shield, Package, FileWarning } from "lucide-react"
 import Link from "next/link"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useRouter } from "next/navigation"
@@ -18,12 +19,14 @@ export default function ResultsPage() {
   const [securityIssues, setSecurityIssues] = useState<SecurityIssue[]>([]);
   const [repositoryUrl, setRepositoryUrl] = useState("");
   const [groupBy, setGroupBy] = useState<GroupByType>('none');
+  const [malwareData, setMalwareData] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
     // Get vulnerabilities from sessionStorage (set during the scanning process)
     const vulnerabilitiesStr = sessionStorage.getItem("vulnerabilities");
     const repoUrl = sessionStorage.getItem("repositoryUrl");
+    const malwareStr = sessionStorage.getItem("malware");
     
     if (!vulnerabilitiesStr || !repoUrl) {
       // If no data found, redirect to home page
@@ -38,6 +41,16 @@ export default function ResultsPage() {
         setSecurityIssues(vulnerabilities.issues);
       }
       setRepositoryUrl(repoUrl);
+      
+      // Parse malware data if available
+      if (malwareStr) {
+        try {
+          const malware = JSON.parse(malwareStr);
+          setMalwareData(malware);
+        } catch (error) {
+          console.error("Error parsing malware data:", error);
+        }
+      }
     } catch (error) {
       console.error("Error parsing vulnerabilities:", error);
       // Handle error - maybe redirect or show an error message
@@ -136,6 +149,15 @@ export default function ResultsPage() {
                     <span>Package Issues</span>
                   </div>
                 </TabsTrigger>
+                <TabsTrigger
+                  value="malware"
+                  className="data-[state=active]:border-b-2 data-[state=active]:border-black data-[state=active]:shadow-none rounded-none h-12 px-1"
+                >
+                  <div className="flex items-center gap-2">
+                    <FileWarning className="h-5 w-5" />
+                    <span>Malware Detection</span>
+                  </div>
+                </TabsTrigger>
               </TabsList>
             </div>
 
@@ -173,6 +195,25 @@ export default function ResultsPage() {
                 </div>
               </div>
               <PackageIssues />
+            </TabsContent>
+            
+            <TabsContent value="malware" className="mt-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold text-black">Malware Detection</h2>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">Filter by:</span>
+                  <Button variant="outline" size="sm" className="h-8 border-gray-300 bg-gray-50">
+                    All
+                  </Button>
+                  <Button variant="outline" size="sm" className="h-8 border-gray-300">
+                    Malicious
+                  </Button>
+                  <Button variant="outline" size="sm" className="h-8 border-gray-300">
+                    Suspicious
+                  </Button>
+                </div>
+              </div>
+              <MalwareScanTable />
             </TabsContent>
           </Tabs>
         </div>
