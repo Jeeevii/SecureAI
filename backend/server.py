@@ -43,8 +43,8 @@ async def get_vulnerabilities(repo: RepositoryRequest = Body(...)):
         # Add the repository URL to the response (useful for displaying in the UI)
         vulnerabilities["repositoryUrl"] = repo.url
         vulnerabilities["scanDate"] = os.path.getmtime(vulnerabilities_path)
-            
         return JSONResponse(content=vulnerabilities)
+    
     except Exception as e:
         if isinstance(e, HTTPException):
             raise e

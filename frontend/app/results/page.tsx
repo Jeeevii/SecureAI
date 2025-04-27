@@ -9,9 +9,13 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+// Define the grouping types
+type GroupByType = 'none' | 'severity' | 'file';
+
 export default function ResultsPage() {
   const [securityIssues, setSecurityIssues] = useState<SecurityIssue[]>([]);
   const [repositoryUrl, setRepositoryUrl] = useState("");
+  const [groupBy, setGroupBy] = useState<GroupByType>('none');
   const router = useRouter();
 
   useEffect(() => {
@@ -76,6 +80,14 @@ export default function ResultsPage() {
     }
   };
 
+  const handleGroupBySeverity = () => {
+    setGroupBy(groupBy === 'severity' ? 'none' : 'severity');
+  };
+
+  const handleGroupByFile = () => {
+    setGroupBy(groupBy === 'file' ? 'none' : 'file');
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
@@ -109,16 +121,26 @@ export default function ResultsPage() {
             <h2 className="text-xl font-semibold text-black">Security Issues</h2>
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">Group by:</span>
-              <Button variant="outline" size="sm" className="h-8 border-gray-300 bg-gray-50">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className={`h-8 border-gray-300 ${groupBy === 'severity' ? 'bg-gray-200 border-gray-400' : 'hover:bg-gray-50'}`}
+                onClick={handleGroupBySeverity}
+              >
                 Severity
               </Button>
-              <Button variant="outline" size="sm" className="h-8 border-gray-300">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className={`h-8 border-gray-300 ${groupBy === 'file' ? 'bg-gray-200 border-gray-400' : 'hover:bg-gray-50'}`}
+                onClick={handleGroupByFile}
+              >
                 File
               </Button>
             </div>
           </div>
 
-          <SecurityIssuesTable securityIssues={securityIssues} />
+          <SecurityIssuesTable securityIssues={securityIssues} groupBy={groupBy} />
         </div>
       </div>
     </div>
