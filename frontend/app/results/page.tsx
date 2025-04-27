@@ -106,6 +106,23 @@ export default function ResultsPage() {
   const handleGroupByFile = () => {
     setGroupBy(groupBy === 'file' ? 'none' : 'file');
   };
+  
+  const severityOrder = {
+    'critical': 1,
+    'high': 2, 
+    'medium': 3,
+    'low': 4
+  };
+
+  const sortedSecurityIssues = [...securityIssues].sort((a, b) => {
+    if (groupBy === 'severity') {
+      const severityA = a.severity.toLowerCase();
+      const severityB = b.severity.toLowerCase();
+      
+      return (severityOrder[severityA as keyof typeof severityOrder] || 999) - (severityOrder[severityB as keyof typeof severityOrder] || 999);
+    }
+    return 0;
+  });
 
   return (
     <div className="min-h-screen bg-white">
@@ -192,7 +209,7 @@ export default function ResultsPage() {
                   </Button>
                 </div>
               </div>
-              <SecurityIssuesTable securityIssues={securityIssues} groupBy={groupBy} />
+              <SecurityIssuesTable securityIssues={sortedSecurityIssues} groupBy={groupBy} />
             </TabsContent>
 
             <TabsContent value="packages" className="mt-6">
