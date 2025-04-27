@@ -12,7 +12,7 @@ export default function Home() {
         <div className="flex flex-col items-center justify-center text-center py-12">
           <div className="flex items-center gap-2 mb-6">
             <Shield className="h-12 w-12 text-black" />
-            <h1 className="text-4xl md:text-5xl font-bold text-black">SecureGPT DevLint</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-black">SecureAI DevLint</h1>
           </div>
           <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mb-12">
             AI-powered security scanner for your AI deployment projects

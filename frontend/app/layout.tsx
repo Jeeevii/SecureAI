@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "SecureGPT DevLint",
+  title: "SecureAI DevLint",
   description: "AI-powered security scanner for AI deployment projects",
     generator: 'v0.dev'
 }
