@@ -34,7 +34,7 @@ export default function ScanningPage() {
           return
         }
 
-        const response = await fetch("http://localhost:8000/vulnerabilities", {
+        const response = await fetch("http://localhost:8001/vulnerabilities", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

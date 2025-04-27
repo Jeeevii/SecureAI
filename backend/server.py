@@ -5,8 +5,8 @@ import uvicorn
 import json
 import os
 from pydantic import BaseModel
-from github_scanner import RepoFileFetcher
-from backend.vulnerability_detector import find_vulnerabilities
+from github_scanner import GitHubScanner
+from vulnerability_detector import find_vulnerabilities
 from check_packages import check_packages
 from github_repo_packages import RepoFileFetcher as PackageRepoFileFetcher
 
@@ -29,7 +29,7 @@ async def scan_repo(repo: RepositoryRequest = Body(...)):
         os.makedirs("json_output", exist_ok=True)
         
         temp_files_json = "json_output/repo_files.json"
-        fetcher = RepoFileFetcher(repo.url, output=temp_files_json)
+        fetcher = GitHubScanner(repo.url, output=temp_files_json)
         fetcher.run()
         
         packages_json = "json_output/repo_packages.json"
@@ -59,5 +59,5 @@ async def scan_repo(repo: RepositoryRequest = Body(...)):
         raise HTTPException(status_code=500, detail=f"Error retrieving vulnerabilities: {str(e)}")
     
 if __name__ == "__main__":
-    uvicorn.run("server:app", host="localhost", port=8000, reload=True)
+    uvicorn.run("server:app", host="localhost", port=8001, reload=True)
 
