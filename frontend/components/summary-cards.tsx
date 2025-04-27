@@ -10,7 +10,7 @@ interface SummaryCardsProps {
 }
 
 export function SummaryCards({ issues = [] }: SummaryCardsProps) {
-  const highIssues = issues.filter(issue => issue.severity.toLowerCase() === "high").length;
+  const highIssues = issues.filter(issue => issue.severity.toLowerCase() === "high").length + issues.filter(issue => issue.severity.toLowerCase() === "critical").length;
   const mediumIssues = issues.filter(issue => issue.severity.toLowerCase() === "medium").length;
   const lowIssues = issues.filter(issue => issue.severity.toLowerCase() === "low").length;
   const totalIssues = issues.length;

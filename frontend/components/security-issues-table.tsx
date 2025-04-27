@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, Copy, AlertOctagon, AlertTriangle, AlertCircle } from "lucide-react";
+import { ChevronDown, ChevronUp, Copy, AlertOctagon, AlertTriangle, AlertCircle, OctagonX  } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export interface SecurityIssue {
@@ -11,7 +11,7 @@ export interface SecurityIssue {
   fileName: string;
   lineNumber: number;
   issueType: string;
-  severity: "high" | "medium" | "low";
+  severity: "critical" | "high" | "medium" | "low";
   description: string;
   codeSnippet: string;
   suggestedFix: string;
@@ -86,6 +86,8 @@ export function SecurityIssuesTable({
 
   const getSeverityIcon = (severity: string) => {
     switch (severity.toLowerCase()) {
+      case "critical":
+        return <OctagonX className="h-5 w-5 text-red-700" />;
       case "high":
         return <AlertOctagon className="h-5 w-5 text-red-500" />;
       case "medium":

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { AlertOctagon, AlertTriangle, AlertCircle, CheckCircle, Package } from "lucide-react"
+import { AlertOctagon, AlertTriangle, AlertCircle, CheckCircle, Package, OctagonX } from "lucide-react"
 
 // Properly parse the data from sessionStorage with a fallback structure
 const getPackageIssuesData = () => {
@@ -44,10 +44,16 @@ export function PackageIssues() {
 
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
+        case "critical":
+            return <OctagonX className="h-5 w-5 text-red-700" />
+
       case "high":
         return <AlertOctagon className="h-5 w-5 text-red-500" />
       case "medium":
         return <AlertTriangle className="h-5 w-5 text-yellow-500" />
+    case "moderate":
+        return <AlertTriangle className="h-5 w-5 text-yellow-500" />
+
       case "low":
         return <AlertCircle className="h-5 w-5 text-blue-500" />
       default:
