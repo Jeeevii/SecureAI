@@ -103,10 +103,7 @@ export default function ResultsPage() {
             </p>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" className="border-gray-300 text-gray-700 hover:text-black hover:bg-gray-50">
-              <FileText className="h-4 w-4 mr-2" />
-              View Raw Log
-            </Button>
+           
             <Button className="bg-black hover:bg-gray-800 text-white" onClick={downloadRaw}>
               <Download className="h-4 w-4 mr-2" />
               Download Report

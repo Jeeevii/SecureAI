@@ -24,7 +24,6 @@ app.add_middleware(
 @app.post("/vulnerabilities")
 async def get_vulnerabilities(repo: RepositoryRequest = Body(...)):
     try:
-        # Create output directory if it doesn't exist
         os.makedirs("json_output", exist_ok=True)
         
         temp_files_json = "json_output/repo_files.json"
