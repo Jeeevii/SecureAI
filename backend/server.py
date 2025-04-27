@@ -25,12 +25,12 @@ app.add_middleware(
 async def get_vulnerabilities(repo: RepositoryRequest = Body(...)):
     try:
         # Step 1: Use GitHub scanner to fetch repository files
-        temp_files_json = "repo_files.json"
+        temp_files_json = "json_output/repo_files.json"
         fetcher = RepoFileFetcher(repo.url, output=temp_files_json)
         fetcher.run()
         
         # Step 2: Run vulnerability analysis on the fetched files
-        vulnerabilities_path = "vulnerabilities.json"
+        vulnerabilities_path = "json_output/vulnerabilities.json"
         find_vulnerabilities(temp_files_json, vulnerabilities_path)
         
         # Step 3: Read and return the results
@@ -42,6 +42,7 @@ async def get_vulnerabilities(repo: RepositoryRequest = Body(...)):
             
         # Add the repository URL to the response (useful for displaying in the UI)
         vulnerabilities["repositoryUrl"] = repo.url
+        vulnerabilities["scanDate"] = os.path.getmtime(vulnerabilities_path)
             
         return JSONResponse(content=vulnerabilities)
     except Exception as e:
