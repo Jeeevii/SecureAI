@@ -1,7 +1,0 @@
-[
-  {
-    "id": 1,
-    "path": "index.html",
-    "contents": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Vulnerable Web App</title>\n</head>\n<body>\n    <h1>Vulnerable Login Page</h1>\n    <form id=\"loginForm\">\n        <label>Username:</label>\n        <input type=\"text\" id=\"username\"><br><br>\n        <label>Password:</label>\n        <input type=\"password\" id=\"password\"><br><br>\n        <button type=\"submit\">Login</button>\n    </form>\n\n    <h2>Search</h2>\n    <input type=\"text\" id=\"searchBox\">\n    <button onclick=\"search()\">Search</button>\n    <div id=\"results\"></div>\n\n    <script>\n        // Vulnerable login (no validation or server check)\n        document.getElementById('loginForm').addEventListener('submit', function(e) {\n            e.preventDefault();\n            var username = document.getElementById('username').value;\n            var password = document.getElementById('password').value;\n            alert('Logged in as ' + username);\n        });\n\n        // Vulnerable search (XSS possible)\n        function search() {\n            var query = document.getElementById('searchBox').value;\n            document.getElementById('results').innerHTML = \"You searched for: \" + query;\n        }\n    </script>\n</body>\n</html>"
-  }
-]
