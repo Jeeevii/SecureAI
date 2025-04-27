@@ -75,8 +75,12 @@ class RepoFileFetcher:
         return data
 
     def write_json(self, data):
-        raw_json = json.dumps(data, ensure_ascii=False, indent=2)
-        # raw_json = raw_json.replace('\\"', '"')
+        num_files = len(data)  # Calculate the number of files
+        json_data = {
+            "num_files": num_files,
+            "files": data
+        }
+        raw_json = json.dumps(json_data, ensure_ascii=False, indent=2)
         with open(self.output, 'w', encoding='utf-8') as f:
             f.write(raw_json)
 
@@ -99,7 +103,6 @@ def main():
         fetcher.run()
     except Exception as e:
         sys.exit(e)
-
 
 if __name__ == '__main__':
     main()
