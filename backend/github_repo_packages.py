@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from concurrent.futures import ThreadPoolExecutor
 
 class RepoFileFetcher:
-    ALLOWED_FILES = {'package.json', 'requirements.txt'}
+    ALLOWED_FILES = {'package-lock.json', 'requirements.txt'}
     DEFAULT_IGNORE_DIRS = {'node_modules', '.git', '.md', '.pdf', '.css', '.json'}
 
     def __init__(self, repo_url, output='repo_packages.json'):
