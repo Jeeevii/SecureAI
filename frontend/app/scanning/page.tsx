@@ -16,18 +16,12 @@ export default function ScanningPage() {
     "Connecting to GitHub API...",
     "Fetching repository metadata...",
     "Analyzing repository structure...",
-    "Scanning main branch for security issues...",
     "Examining package dependencies...",
     "Checking for hardcoded credentials...",
-    "Analyzing Docker configuration files...",
     "Scanning API endpoints for vulnerabilities...",
     "Checking input validation patterns...",
-    "Examining authentication mechanisms...",
     "Analyzing prompt handling for injection risks...",
-    "Checking for rate limiting implementations...",
-    "Scanning environment configurations...",
-    "Analyzing data handling patterns...",
-    "Generating comprehensive security report...",
+    "Generating security report...",
   ]
 
   // Make the actual API call to the backend
@@ -53,6 +47,9 @@ export default function ScanningPage() {
         }
 
         const data = await response.json()
+        if (!data || !data.issues) {
+          throw new Error("Invalid response format")
+        }
         
         // Store the vulnerabilities in sessionStorage
         sessionStorage.setItem("vulnerabilities", JSON.stringify(data))

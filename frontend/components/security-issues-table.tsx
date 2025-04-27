@@ -36,7 +36,7 @@ export function SecurityIssuesTable({ securityIssues }: { securityIssues: Securi
   };
 
   const getSeverityIcon = (severity: string) => {
-    switch (severity) {
+    switch (severity.toLowerCase()) {
       case "high":
         return <AlertOctagon className="h-5 w-5 text-red-500" />;
       case "medium":

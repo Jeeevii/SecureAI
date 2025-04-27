@@ -5,6 +5,8 @@ import uvicorn
 import json
 import os
 from pydantic import BaseModel
+from github_scanner import RepoFileFetcher
+from find_vulnerabilities import find_vulnerabilities
 
 class RepositoryRequest(BaseModel):
     url: str
@@ -22,8 +24,16 @@ app.add_middleware(
 @app.post("/vulnerabilities")
 async def get_vulnerabilities(repo: RepositoryRequest = Body(...)):
     try:
-        vulnerabilities_path = "vulnerabilities.json"
+        # Step 1: Use GitHub scanner to fetch repository files
+        temp_files_json = "repo_files.json"
+        fetcher = RepoFileFetcher(repo.url, output=temp_files_json)
+        fetcher.run()
         
+        # Step 2: Run vulnerability analysis on the fetched files
+        vulnerabilities_path = "vulnerabilities.json"
+        find_vulnerabilities(temp_files_json, vulnerabilities_path)
+        
+        # Step 3: Read and return the results
         if not os.path.exists(vulnerabilities_path):
             raise HTTPException(status_code=404, detail="Vulnerabilities file not found")
             
