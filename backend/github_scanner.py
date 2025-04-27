@@ -11,21 +11,20 @@ class RepoFileFetcher:
     DEFAULT_EXTENSIONS = {
         '.py', '.pyx', '.pyd', '.pyi', '.pyc',
         '.rs', '.rlib',
-        '.html', '.htm', '.css', '.scss', '.sass', '.less',
+        '.html', '.htm', '.scss', '.sass', '.less',
         '.js', '.jsx', '.ts', '.tsx', '.vue', '.svelte',
         '.cpp', '.c', '.cc', '.cxx', '.h', '.hpp', '.hxx',
         '.java', '.kt', '.kts', '.groovy',
-        '.cs', '.vb', '.fs',
-        '.go',
+        '.cs', '.vb', '.fs', '.go',
         '.rb', '.erb', '.rake',
         '.php', '.phtml', '.php3', '.php4', '.php5',
         '.swift', '.m', '.mm',
         '.sh', '.bash', '.zsh', '.fish',
-        '.json', '.yaml', '.yml', '.toml', '.xml', '.ini', '.config',
+        '.yaml', '.yml', '.toml', '.xml', '.ini', '.config',
         'Dockerfile', '.dockerfile', '.dockerignore',
-        '.sql', '.graphql', '.proto', '.md',
+        '.sql', '.graphql', '.proto'
     }
-    DEFAULT_IGNORE_DIRS = {'node_modules', '.git', '.md', '.pdf', '.css'}
+    DEFAULT_IGNORE_DIRS = {'node_modules', '.git', '.md', '.pdf', '.css', '.json'}
 
     def __init__(self, repo_url, output='repo_files.json'):
         self.owner, self.repo = self._parse_github_url(repo_url)
