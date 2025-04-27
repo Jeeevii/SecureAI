@@ -1,22 +1,102 @@
 [
   {
-    "fileName": "index.html",
-    "lineNumber": 22,
-    "issueType": "Insecure data handling",
-    "severity": "High",
-    "description": "The login form does not validate the user's credentials. Instead, it simply takes the input from the user and displays it in an alert. This means that anyone can 'log in' with any credentials.",
-    "codeSnippet": "document.getElementById('loginForm').addEventListener('submit', function(e) {\n            e.preventDefault();\n            var username = document.getElementById('username').value;\n            var password = document.getElementById('password').value;\n            alert('Logged in as ' + username);\n        });",
-    "suggestedFix": "Implement a secure server-side authentication mechanism. This could involve checking the provided username and password against a database of registered users. Also, consider using secure session management and HTTPS to protect the user's credentials during transmission.",
+    "fileName": "app/page.tsx",
+    "lineNumber": 12,
+    "issueType": "Best Practice",
+    "severity": "Low",
+    "description": "Use of localStorage for storing theme preference. localStorage is accessible by any script on your page, which can lead to potential security issues if malicious scripts are injected into your page.",
+    "codeSnippet": "const savedTheme = localStorage.getItem(\"theme\")",
+    "suggestedFix": "Consider storing sensitive information in HTTP Only cookies or server-side.",
     "id": 1
   },
   {
-    "fileName": "index.html",
-    "lineNumber": 29,
-    "issueType": "Potential cross-site scripting (XSS)",
-    "severity": "High",
-    "description": "The search function takes the user's input and directly inserts it into the page's HTML. This could allow an attacker to inject malicious scripts into the page, which would then be executed in the user's browser.",
-    "codeSnippet": "function search() {\n            var query = document.getElementById('searchBox').value;\n            document.getElementById('results').innerHTML = \"You searched for: \" + query;\n        }",
-    "suggestedFix": "Use textContent instead of innerHTML to insert the user's input into the page. This will ensure that the input is treated as text and not as HTML or JavaScript code. Alternatively, sanitize the user's input before inserting it into the page to remove any potentially harmful code.",
+    "fileName": "app/page.tsx",
+    "lineNumber": 20,
+    "issueType": "Best Practice",
+    "severity": "Low",
+    "description": "Use of console.error and console.log. It's generally a good practice to avoid logging sensitive information in production as it could potentially be viewed by malicious actors.",
+    "codeSnippet": "console.error(\"Failed to copy email: \", err)",
+    "suggestedFix": "Remove console logs in production or make sure they do not contain sensitive information.",
     "id": 2
+  },
+  {
+    "fileName": "app/page.tsx",
+    "lineNumber": 12,
+    "issueType": "Potential Privacy Concern",
+    "severity": "Low",
+    "description": "Use of window.matchMedia. This API can be used to track users' system preferences, which could potentially be a privacy concern.",
+    "codeSnippet": "const prefersDark = window.matchMedia(\"(prefers-color-scheme: dark)\").matches",
+    "suggestedFix": "Ensure you have user consent before tracking system preferences.",
+    "id": 3
+  },
+  {
+    "fileName": "app/page.tsx",
+    "lineNumber": 20,
+    "issueType": "Best Practice",
+    "severity": "Low",
+    "description": "Use of navigator.clipboard.writeText. This API can be a potential security concern if not used properly. In this case, it's used to copy a static email address to the clipboard, so it's not a concern. However, if it were used to copy sensitive user data, it could potentially be a security issue.",
+    "codeSnippet": "navigator.clipboard.writeText(text).then(() => { ... })",
+    "suggestedFix": "Ensure you are not copying sensitive user data to the clipboard.",
+    "id": 4
+  },
+  {
+    "fileName": "components/theme-toggle.tsx",
+    "lineNumber": 6,
+    "issueType": "Insecure Data Storage",
+    "severity": "Low",
+    "description": "The theme preference is stored in local storage which can be accessed by client-side JavaScript. This could potentially be exploited by malicious scripts.",
+    "codeSnippet": "const savedTheme = localStorage.getItem('theme')",
+    "suggestedFix": "Consider using HttpOnly cookies or server-side storage for storing sensitive information. In this case, since the data is not sensitive, the risk is low and may not require any changes.",
+    "id": 5
+  },
+  {
+    "fileName": "components/theme-toggle.tsx",
+    "lineNumber": 13,
+    "issueType": "Insecure Data Storage",
+    "severity": "Low",
+    "description": "The theme preference is stored in local storage which can be accessed by client-side JavaScript. This could potentially be exploited by malicious scripts.",
+    "codeSnippet": "localStorage.setItem('theme', 'light')",
+    "suggestedFix": "Consider using HttpOnly cookies or server-side storage for storing sensitive information. In this case, since the data is not sensitive, the risk is low and may not require any changes.",
+    "id": 6
+  },
+  {
+    "fileName": "components/theme-toggle.tsx",
+    "lineNumber": 16,
+    "issueType": "Insecure Data Storage",
+    "severity": "Low",
+    "description": "The theme preference is stored in local storage which can be accessed by client-side JavaScript. This could potentially be exploited by malicious scripts.",
+    "codeSnippet": "localStorage.setItem('theme', 'dark')",
+    "suggestedFix": "Consider using HttpOnly cookies or server-side storage for storing sensitive information. In this case, since the data is not sensitive, the risk is low and may not require any changes.",
+    "id": 7
+  },
+  {
+    "fileName": "components/ui/chart.tsx",
+    "lineNumber": 78,
+    "issueType": "Potential Cross-Site Scripting (XSS)",
+    "severity": "Medium",
+    "description": "The use of `dangerouslySetInnerHTML` can potentially lead to cross-site scripting (XSS) attacks if the input is not properly sanitized.",
+    "codeSnippet": "<style dangerouslySetInnerHTML={{ __html: Object.entries(THEMES) .map(([theme, prefix]) => `${prefix} [data-chart=${id}] {${colorConfig .map(([key, itemConfig]) => { const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color return color ? `  --color-${key}: ${color};` : null }) .join('\\n')}}` ) .join('\\n'), }} />",
+    "suggestedFix": "Ensure that any user-supplied input or other data used within `dangerouslySetInnerHTML` is properly sanitized to prevent potential XSS attacks. Consider using a library to sanitize HTML or use React's built-in mechanisms for preventing XSS.",
+    "id": 8
+  },
+  {
+    "fileName": "components/ui/popover.tsx",
+    "lineNumber": 1,
+    "issueType": "Hardcoded credentials",
+    "severity": "High",
+    "description": "API key is hardcoded into the application, which could be exposed if the codebase is leaked or decompiled.",
+    "codeSnippet": "const apiKey = 'abc123';",
+    "suggestedFix": "Store API keys and other sensitive information in environment variables or a secure secrets manager.",
+    "id": 9
+  },
+  {
+    "fileName": "components/ui/textarea.tsx",
+    "lineNumber": 10,
+    "issueType": "Unsafe user input handling",
+    "severity": "High",
+    "description": "User-provided data is passed as a prop to the Textarea component without proper sanitization, potentially leading to a cross-site scripting (XSS) vulnerability.",
+    "codeSnippet": "{...props}",
+    "suggestedFix": "Sanitize all user-provided data before passing it as a prop to the Textarea component.",
+    "id": 10
   }
 ]
