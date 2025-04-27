@@ -73,6 +73,7 @@ async def analyze_file(file_info):
             - AI model deployment risks (unsafe environment configs)
 
             If a vulnerability spans multiple chunks, note it and analyze the surrounding context carefully.
+            When providing "codeSnippet," return the EXACT snippet directly from the code above with no modifications or ellipses.
 
             Return ONLY a JSON array where each object includes:
             - "id" (unique integer ID starting from 1)
@@ -102,7 +103,9 @@ async def analyze_file(file_info):
 
                 if snippet and snippet != "No snippet provided.":
                     line_number = find_snippet_line(contents, snippet)
-
+                # print("ln:", line_number)
+                if (line_number == "null"):
+                    return
                 clean_vuln = {
                     "id": None,  # Assigned later
                     "fileName": file_path,
@@ -173,18 +176,14 @@ async def find_vulnerabilities(input_file, output_file=None):
     return all_vulnerabilities
 
 def find_snippet_line(contents, snippet):
-    """
-    Finds the starting line number of the snippet within contents.
-    Returns the line number (1-based) or None if not found.
-    """
+    first_line = snippet.strip().splitlines()[0].strip()
     content_lines = contents.splitlines()
-    snippet_lines = snippet.strip().splitlines()
 
-    for i in range(len(content_lines) - len(snippet_lines) + 1):
-        window = content_lines[i:i + len(snippet_lines)]
-        if all(snippet_lines[j].strip() in window[j] for j in range(len(snippet_lines))):
-            return i + 1
+    for i, line in enumerate(content_lines):
+        if first_line in line.strip():
+            return i + 1  # Line numbers are 1-based
     return None
+
 
 def main():
     input_file = "json_output/repo_files.json"
