@@ -61,8 +61,8 @@ class RepoFileFetcher:
 
     @staticmethod
     def _sanitize_content(text):
-        # return text.replace('\r\n', ' ').replace('\n', ' ').replace('\r', ' ')
-        return text
+        return text.replace('\r\n', ' ').replace('\n', ' ').replace('\r', ' ')
+        # return text
 
     def fetch_file_data(self, idx, item):
         path = item.get('path')
