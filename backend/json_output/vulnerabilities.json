@@ -1,206 +1,34 @@
 {
-  "repositoryName": "Secure Code Repository",
-  "scanDate": "2025-04-27T03:14:39.673587+00:00Z",
   "issues": [
     {
       "id": 1,
-      "fileName": "slugrush_backend/database.py",
-      "lineNumber": 92,
-      "issueType": "SQL-Injection",
-      "severity": "High",
-      "description": "The `delete_by_id` function constructs a SQL query using an f-string with the `table` variable. Although the `table` variable is checked against an ALLOWED list, this check can be bypassed if the attacker controls the `table` variable to include valid parts of allowed strings with malicious SQL injection. This can allow an attacker to execute arbitrary SQL commands, potentially leading to data breaches, modification, or deletion.",
-      "codeSnippet": "   def delete_by_id(self, table: str, id: int) -> None: # delete rows based on ID from days_count table\n        if table not in ALLOWED: # prevents prompt injection \n            return \n        \n        delete_query = f\"\"\"\n            DELETE FROM {table} WHERE id = %s; \n        \"\"\"",
-      "suggestedFix": "Use parameterized queries with a safe table name identifier. Instead of string formatting, use a dictionary to map allowed table names to safe identifiers, and use the identifier in the query.  Or use a prepared statement to sanitize the table name, if the psycopg2 library supports table names as parameters."
+      "fileName": "index.js",
+      "lineNumber": 40,
+      "issueType": "XSS",
+      "severity": "Medium",
+      "description": "The code constructs HTML by interpolating the `log.content` value directly into a div. If `log.content` contains HTML-like characters or script tags, it could lead to Cross-Site Scripting (XSS).  The `log.content` originates from user actions such as text selection or key presses making it user-controlled and thus controllable.",
+      "codeSnippet": "html += `<div class=\"log-entry\">\n                <span class=\"log-timestamp\">[${log.timestamp}]</span>\n                <span class=\"log-content\">${log.content}</span>\n            </div>`;",
+      "suggestedFix": "Escape the `log.content` value before inserting it into the HTML. Use a function to replace characters like `<`, `>`, `&`, and `\"` with their corresponding HTML entities."
     },
     {
       "id": 2,
-      "fileName": "slugrush_backend/database.py",
-      "lineNumber": 177,
-      "issueType": "SQL-Injection",
+      "fileName": "index.js",
+      "lineNumber": 30,
+      "issueType": "DataExposure",
       "severity": "Medium",
-      "description": "The `get_live` function constructs a SQL query directly. While the query itself doesn't appear to have user-supplied parameters, the function `send_query` which is called here, can be vulnerable to SQL injection depending on the context in which it's used and if future modifications introduce user-controlled data into the `get_live_query` string.  It's best practice to avoid direct string construction for SQL queries even without immediate injection risks.",
-      "codeSnippet": "        get_live_query = \"\"\"\n            select id from days_count WHERE status = 1\n        \"\"\"\n        self.send_query(get_live_query)",
-      "suggestedFix": "Use a parameterized query even when it seems unnecessary now, to prevent future vulnerabilities if the query is modified to include user-controlled input. Alternatively, ensure all parameters used in constructing SQL queries are properly sanitized and validated."
+      "description": "The application fetches the user's IP address, geolocation (city, region, country), zip code, coordinates (latitude, longitude), ISP, and organization using the ipapi.co service and displays it in the user interface.  While this is intended for browser information logging, it exposes potentially sensitive personal information to anyone viewing the page. This could be a privacy issue, especially if the purpose of this page isn't explicitly clear to the user, or if it's embedded in a context where the user wouldn't expect such information to be collected and displayed.",
+      "codeSnippet": "fetch('https://ipapi.co/json/')\n            .then(response => response.json())\n            .then(data => {\n                //console.log('IP/location data:', data);\n                updateElement('ip', data.ip);\n                \n                updateElement('geolocation', `${data.city}, ${data.region}, ${data.country_name}`);\n                updateElement('zip-code', data.postal || 'Not available');\n                updateElement('location-coordinates', `Latitude: ${data.latitude}\\nLongitude: ${data.longitude}`);\n                updateElement('isp', data.asn || 'Not available');\n                updateElement('organization', data.org || 'Not available');\n                updateElement('version', data.version || 'Not available');",
+      "suggestedFix": "Clearly inform the user about the information being collected and displayed. Consider providing an option to disable or mask the geolocation data. Only collect and display the minimum necessary information and ensure data is not stored or transmitted unnecessarily. Evaluate if displaying this data publicly aligns with privacy best practices."
     },
     {
       "id": 3,
-      "fileName": "slugrush_backend/database.py",
-      "lineNumber": 79,
-      "issueType": "SQL-Injection",
+      "fileName": "index.js",
+      "lineNumber": 78,
+      "issueType": "ClipboardAccess",
       "severity": "Medium",
-      "description": "The `get_daily_query` function constructs a SQL query to fetch hourly data based on a `day_id`.  The `day_id` is taken directly from the database from a previous query. While in the current form, it's not directly exploitable as the `day_id` value isn't influenced by external input, it's an insecure coding pattern. If the `id` used in `day_query` was ever to come from user input, it would be vulnerable to SQL injection. Although this is mitigated in this specific case by taking `id` from the database itself, it creates a pathway for SQL injection if the logic changes to allow user-controlled input in the future.",
-      "codeSnippet": "        day_query = \"\"\"\n            select day_id, hour, minute, crowd_count, timestamp from hourly_count where day_id = %s\n        \"\"\"\n        try:\n            db_logger.warning('Sent get_daily_query to Database!')\n            self.send_query(day_query, (id,))",
-      "suggestedFix": "Even though it is currently not exploitable, enforce input validation or use parameterized queries consistently to prevent potential SQL injection vulnerabilities.  Specifically, ensure that the `id` variable is always an integer."
-    },
-    {
-      "id": 4,
-      "fileName": "slugrush_backend/database.py",
-      "lineNumber": 110,
-      "issueType": "SQL-Injection",
-      "severity": "Medium",
-      "description": "Similar to the `get_daily_query` function, the `get_weekly_query` function constructs a SQL query with a hardcoded `where dc.id <= 7` clause. While currently safe, if this value were ever to depend on user input, it would introduce an SQL injection vulnerability. Although, it is currently safe, this should be remediated.",
-      "codeSnippet": "            from days_count dc\n            left join hourly_count hc on dc.id = hc.day_id\n            where dc.id <= 7\n            ORDER BY dc.id, hc.hour, hc.minute",
-      "suggestedFix": "Avoid constructing queries with string concatenation or interpolation. Use parameterized queries to prevent SQL injection, even when the values might seem safe at the moment. Ensure the value '7' is not from external sources."
-    },
-    {
-      "id": 5,
-      "fileName": "slugrush_backend/docker-compose.yml",
-      "lineNumber": 9,
-      "issueType": "HardcodedCredentials",
-      "severity": "Critical",
-      "description": "The docker-compose.yml file contains hardcoded credentials for the PostgreSQL database. Specifically, the `POSTGRES_USER` is set to 'homies' and `POSTGRES_PASSWORD` is set to 'banana'. This is a critical vulnerability because anyone with access to this file or the deployed environment can gain unauthorized access to the database.",
-      "codeSnippet": "      POSTGRES_USER: homies\n      POSTGRES_PASSWORD: banana",
-      "suggestedFix": "Use environment variables or a secrets management solution to securely store and inject the database credentials. For example, use a .env file to load the credentials into the environment or use Docker secrets. Do NOT commit the actual credentials to the repository."
-    },
-    {
-      "id": 6,
-      "fileName": "slugrush_backend/post_scripts/post_crowd.sh",
-      "lineNumber": 10,
-      "issueType": "Insecure File Overwrite",
-      "severity": "Low",
-      "description": "The script saves the response of a POST request to a file named `crowd_response.json` without any checks. If an attacker can control the current directory or has write access to the parent directory, they could potentially overwrite existing files by crafting a malicious response that contains shell commands or other harmful data. Although the risk is low due to requiring some level of access, the lack of input sanitization presents a potential vulnerability.",
-      "codeSnippet": "curl -X POST \\\n  http://127.0.0.1:8000/post/crowd/ \\\n  -H \"accept: application/json\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{",
-      "suggestedFix": "Consider adding a check to ensure that the output file does not exist or using a temporary file to avoid overwriting existing files unintentionally. Alternatively, restrict the script's execution to a specific directory where file overwrites would not pose a significant risk."
-    },
-    {
-      "id": 7,
-      "fileName": "slugrush_backend/scheduler.py",
-      "lineNumber": 58,
-      "issueType": "HardcodedSecret",
-      "severity": "High",
-      "description": "The `ping_backend` function contains a hardcoded URL `https://slugrush-backend.onrender.com/`. While this isn't a secret API key, it directly exposes the backend's address. This could enable attackers to bypass intended access controls, or target the server directly in a DDoS or reconnaissance attempt. Additionally, if the domain or subdomain is ever transferred to an attacker, they can potentially intercept traffic or redirect users to a malicious site.",
-      "codeSnippet": "response = requests.get(\"https://slugrush-backend.onrender.com/\")",
-      "suggestedFix": "Store the backend URL in an environment variable. Read and use that environment variable to dynamically construct the URL during runtime.  For example: `backend_url = os.environ.get(\"BACKEND_URL\")` and then `response = requests.get(backend_url)`"
-    },
-    {
-      "id": 8,
-      "fileName": "slugrush_backend/server.py",
-      "lineNumber": 48,
-      "issueType": "Insecure Deserialization",
-      "severity": "High",
-      "description": "The application scrapes data using `scraper.gym_scrape()` and then parses the returned data using `json.loads(data)`. If the scraped data is from an untrusted source, this could lead to arbitrary code execution through insecure deserialization.  An attacker could inject malicious JSON data that, when deserialized, executes arbitrary code on the server.",
-      "codeSnippet": "data = scraper.gym_scrape()\n        return json.loads(data)",
-      "suggestedFix": "Sanitize the scraped data before parsing it with `json.loads()`. Ideally, validate that the scraped data adheres to an expected schema before deserialization.  If possible, switch to a safer data format (e.g., structured text) or use a secure parser library to limit the impact of malicious data."
-    },
-    {
-      "id": 9,
-      "fileName": "slugrush_backend/sql_queries/play.sql",
-      "lineNumber": 1,
-      "issueType": "SQLInjection",
-      "severity": "High",
-      "description": "The SQL file contains hardcoded SQL statements. If these statements are ever constructed dynamically using user-supplied input without proper sanitization or parameterization, it could lead to SQL injection vulnerabilities. An attacker could inject malicious SQL code into the query, potentially gaining unauthorized access to the database, modifying data, or even executing arbitrary commands on the server.",
-      "codeSnippet": "INSERT INTO days_count (id, date, status, day_of_week )\nVALUES (7, '2025-4-6', 1, 'Sunday')",
-      "suggestedFix": "Avoid constructing SQL queries using string concatenation with user-provided input. Instead, use parameterized queries or prepared statements. This ensures that user input is treated as data, not as executable code."
-    },
-    {
-      "id": 10,
-      "fileName": "slugrush_backend/sql_queries/play.sql",
-      "lineNumber": 16,
-      "issueType": "SQLInjection",
-      "severity": "High",
-      "description": "The SQL file contains hardcoded SQL statements. If these statements are ever constructed dynamically using user-supplied input without proper sanitization or parameterization, it could lead to SQL injection vulnerabilities. An attacker could inject malicious SQL code into the query, potentially gaining unauthorized access to the database, modifying data, or even executing arbitrary commands on the server.",
-      "codeSnippet": "DELETE FROM hourly_count WHERE id = 5;",
-      "suggestedFix": "Avoid constructing SQL queries using string concatenation with user-provided input. Instead, use parameterized queries or prepared statements. This ensures that user input is treated as data, not as executable code."
-    },
-    {
-      "id": 11,
-      "fileName": "slugrush_backend/sql_queries/play.sql",
-      "lineNumber": 19,
-      "issueType": "SQLInjection",
-      "severity": "High",
-      "description": "The SQL file contains hardcoded SQL statements. If these statements are ever constructed dynamically using user-supplied input without proper sanitization or parameterization, it could lead to SQL injection vulnerabilities. An attacker could inject malicious SQL code into the query, potentially gaining unauthorized access to the database, modifying data, or even executing arbitrary commands on the server.",
-      "codeSnippet": "UPDATE days_count SET status = 0 WHERE id = 2",
-      "suggestedFix": "Avoid constructing SQL queries using string concatenation with user-provided input. Instead, use parameterized queries or prepared statements. This ensures that user input is treated as data, not as executable code."
-    },
-    {
-      "id": 12,
-      "fileName": "slugrush_backend/sql_queries/setup.sql",
-      "lineNumber": 9,
-      "issueType": "MissingIndex",
-      "severity": "Low",
-      "description": "The hourly_count table uses day_id as a foreign key referencing days_count(id). However, there is no index on the day_id column. Without an index, queries joining hourly_count and days_count on day_id will likely result in full table scans, severely impacting performance, especially as the hourly_count table grows. While not a security vulnerability in itself, it can potentially lead to denial-of-service conditions due to slow query execution.",
-      "codeSnippet": "CREATE TABLE IF NOT EXISTS hourly_count (\n    id SERIAL PRIMARY KEY,  -- auto-increment\n    day_id INT NOT NULL REFERENCES days_count(id),",
-      "suggestedFix": "Add an index on the day_id column in the hourly_count table: `CREATE INDEX idx_hourly_count_day_id ON hourly_count (day_id);`"
-    },
-    {
-      "id": 13,
-      "fileName": "slugrush_backend/sql_queries/supabase.sql",
-      "lineNumber": 1,
-      "issueType": "SQL Injection",
-      "severity": "High",
-      "description": "The provided SQL script includes an INSERT statement with hardcoded values. While not directly vulnerable, if this script were part of a larger application where developer input influenced this query (e.g., a configuration file or environment variable), it could become an injection point. For example, if the values were constructed from a string concatenation, a malicious actor could inject arbitrary SQL code.",
-      "codeSnippet": "insert into developers (\"user\", major, age, \"isStudent\")\nvalues('Yong', 'Technology and Information Management', 21, True)",
-      "suggestedFix": "Use parameterized queries or prepared statements to prevent SQL injection. The specific method depends on the application using this SQL script. If the values are coming from a configuration, sanitize and validate those values rigorously."
-    },
-    {
-      "id": 14,
-      "fileName": "slugrush_backend/tools/mockdb_data.py",
-      "lineNumber": 43,
-      "issueType": "Hardcoded Date",
-      "severity": "Low",
-      "description": "The script uses a hardcoded date `datetime(2025, 3, 11)` as the starting point for generating mock data. While not directly a vulnerability, this makes the script less flexible and could lead to confusion or errors if the script is used in a context where the date should be dynamically determined or is relevant to security, such as in a testing environment.",
-      "codeSnippet": "start_date = datetime(2025, 3, 11)",
-      "suggestedFix": "Consider making the start date configurable via a command-line argument or an environment variable to enhance flexibility and avoid hardcoding sensitive information."
-    },
-    {
-      "id": 15,
-      "fileName": "slugrush_backend/web_scraper.py",
-      "lineNumber": 16,
-      "issueType": "Hardcoded Credentials",
-      "severity": "Critical",
-      "description": "The code retrieves the `FO_URL` and `FO_ID` from environment variables. If these environment variables are misconfigured or contain sensitive information (e.g., API keys embedded in the URL), it could lead to information disclosure or unauthorized access. Although the vulnerability relies on misconfiguration, it is considered critical as misconfigurations often occur.",
-      "codeSnippet": "self.url = os.environ.get(\"FO_URL\")\n        self.facility_id = os.environ.get(\"FO_ID\")",
-      "suggestedFix": "Ensure that the environment variables `FO_URL` and `FO_ID` are properly managed and do not contain sensitive information directly. If `FO_URL` contains authentication parameters, consider alternative authentication methods or securely manage the sensitive parts."
-    },
-    {
-      "id": 16,
-      "fileName": "slugrush_backend/web_scraper.py",
-      "lineNumber": 30,
-      "issueType": "Unvalidated Input",
-      "severity": "Medium",
-      "description": "The code directly converts the extracted `occupancy_count` to an integer without proper validation. If the HTML structure changes and `occupancy_count` contains non-numeric characters, the `int()` conversion will raise a ValueError, potentially crashing the scraper. More seriously, a malformed response could be crafted, depending on the URL targeted, that could lead to unexpected behavior.",
-      "codeSnippet": "occupancy_count = facility.find(\"p\", class_=\"occupancy-count\").strong.text.strip()\n        current_datetime = datetime.now(self.local_time) # current date\n        timestamp = current_datetime.strftime(\"%Y-%m-%d %H:%M:%S\") # timestamp\n\n        return json.dumps({\n            'hour': current_datetime.hour,\n            'minute': current_datetime.minute,\n            'crowd_count': int(occupancy_count),",
-      "suggestedFix": "Add input validation to ensure that `occupancy_count` contains only numeric characters before converting it to an integer. Implement proper error handling to gracefully handle cases where the value is not a valid integer."
-    },
-    {
-      "id": 17,
-      "fileName": "slugrush_frontend/src/app/layout.tsx",
-      "lineNumber": 15,
-      "issueType": "Missing Security Headers",
-      "severity": "Low",
-      "description": "The application is missing common security headers in the response. Specifically, this file doesn't configure headers like Content-Security-Policy (CSP), X-Frame-Options, X-Content-Type-Options, Strict-Transport-Security (HSTS), and others. Lack of these headers can make the application vulnerable to XSS, clickjacking, and other attacks.",
-      "codeSnippet": "export const metadata: Metadata = {\n  title: \"Create Next App\",\n  description: \"Generated by create next app\",\n};",
-      "suggestedFix": "Configure security headers in the Next.js configuration or middleware.  For example, use the `next.config.js` to add custom headers using the `headers` configuration option.  Implement a Content Security Policy that allows only trusted sources. Enable HSTS with a reasonable max-age to enforce HTTPS. Set X-Frame-Options to 'sameorigin' or 'deny' to prevent clickjacking. Configure X-Content-Type-Options to 'nosniff' to prevent MIME sniffing attacks."
-    },
-    {
-      "id": 18,
-      "fileName": "slugrush_frontend/src/app/page.tsx",
-      "lineNumber": null,
-      "issueType": "Potential DOS",
-      "severity": "Low",
-      "description": "The `CrowdMeterContainer` component could potentially be vulnerable to a denial-of-service (DoS) attack if it relies on external data (e.g., from an API) to render the crowd meter and that data source becomes unavailable or returns extremely large datasets. This could cause the frontend to become unresponsive or crash. While not directly visible in this code snippet, it depends on the implementation within CrowdMeterContainer.",
-      "codeSnippet": "<CrowdMeterContainer />",
-      "suggestedFix": "Implement error handling within `CrowdMeterContainer` to gracefully handle data fetching failures. Implement data validation and sanitization to prevent excessive data from causing performance issues. Consider implementing timeouts and caching mechanisms."
-    },
-    {
-      "id": 19,
-      "fileName": "slugrush_frontend/src/components/crowd_meter/DailyView.tsx",
-      "lineNumber": 8,
-      "issueType": "Information Disclosure",
-      "severity": "Low",
-      "description": "The component logs raw data fetched from the `fetchDaily` API to the browser console. While this itself isn't necessarily a vulnerability, the data could potentially contain sensitive information about gym usage patterns or even personally identifiable information (PII) depending on the backend implementation of `fetchDaily`. If the data contains sensitive information, logging it to the console exposes it to anyone with access to the browser's developer tools.",
-      "codeSnippet": "console.log('\ud83d\udcbe Raw hourly gym data:', data);",
-      "suggestedFix": "Review the data returned by `fetchDaily` and ensure it doesn't contain any sensitive information. If it does, either filter the data before logging it to the console, or remove the logging statement entirely, especially in a production environment. Consider using a more secure logging mechanism that doesn't expose data to the client-side console."
-    },
-    {
-      "id": 20,
-      "fileName": "slugrush_frontend/src/lib/api.ts",
-      "lineNumber": 1,
-      "issueType": "Hardcoded API URL",
-      "severity": "Low",
-      "description": "The API base URL is hardcoded in the client-side code. This makes it difficult to change the API endpoint without modifying and redeploying the frontend. While not directly a security vulnerability in this case, it violates security principles related to configuration management and could introduce risks if the API URL needs to be updated quickly in response to an incident.",
-      "codeSnippet": "const API_BASE_URL = 'https://slugrush-backend.onrender.com';",
-      "suggestedFix": "Move the API base URL to an environment variable or a configuration file that can be easily updated without redeploying the frontend. Consider using a build-time or runtime configuration mechanism to inject the correct API URL."
+      "description": "The application listens for the 'paste' event and extracts the pasted text from the clipboard.  It then displays a snippet of the pasted text (up to the first 50 characters) and logs the full snippet. This poses a potential security risk, as sensitive information (passwords, API keys, personal data) could inadvertently be pasted into the application and subsequently logged or displayed, potentially exposing it.  Furthermore, a malicious actor could craft a page that subtly encourages users to paste sensitive information, which then gets logged.",
+      "codeSnippet": "document.addEventListener('paste', (e) => {\n        e.preventDefault();\n        const text = e.clipboardData.getData('text/plain');\n        const displayText = text.substring(0, 50) + (text.length > 50 ? '...' : '');\n        updateElement('clipboard', `Pasted: \"${displayText}\"`);\n        \n        addLogEntry('clipboardPastes', `Pasted: \"${displayText}\"`);\n    });",
+      "suggestedFix": "Implement stricter controls over clipboard access.  Ideally, avoid reading the clipboard content entirely unless absolutely necessary.  If clipboard access is required, inform the user that clipboard content will be accessed. Sanitize and validate the pasted data before displaying or logging it. Consider hashing or redacting sensitive parts of the pasted text before logging it. Ensure the logs are securely stored and accessed only by authorized personnel."
     }
   ]
 }
