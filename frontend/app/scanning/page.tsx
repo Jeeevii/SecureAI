@@ -50,9 +50,9 @@ export default function ScanningPage() {
         if (!data || !data.issues) {
           throw new Error("Invalid response format")
         }
-        
         // Store the vulnerabilities in sessionStorage
         sessionStorage.setItem("vulnerabilities", JSON.stringify(data))
+        sessionStorage.setItem("packagesVulnerabilities", JSON.stringify(data.packagesVulnerabilities || {}))
         
         // Mark scan as complete
         scanCompleteRef.current = true
