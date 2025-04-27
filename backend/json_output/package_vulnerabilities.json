@@ -1,0 +1,378 @@
+{
+  "MobileView/package-lock.json": {
+    "package-lock.json": {
+      "@babel/helpers": {
+        "name": "@babel/helpers",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<7.26.10",
+        "fixAvailable": true
+      },
+      "@babel/runtime": {
+        "name": "@babel/runtime",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<7.26.10",
+        "fixAvailable": true
+      },
+      "@expo/cli": {
+        "name": "@expo/cli",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=0.0.0-canary-20231123-1b19f96-4 || 0.0.1-canary-20231125-d600e44 - 0.21.1 || 1.0.0-canary-20240927-ab8a962 - 1.0.0-canary-20241021-c4b5a93",
+        "fixAvailable": true
+      },
+      "@expo/image-utils": {
+        "name": "@expo/image-utils",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=0.0.1-canary-20240109-93608d8 || 0.3.10-alpha.0 - 0.4.2",
+        "fixAvailable": true
+      },
+      "@expo/prebuild-config": {
+        "name": "@expo/prebuild-config",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=7.0.0-beta.0",
+        "fixAvailable": true
+      },
+      "@expo/webpack-config": {
+        "name": "@expo/webpack-config",
+        "severity": "high",
+        "isDirect": false,
+        "range": ">=0.12.53-alpha.0",
+        "fixAvailable": true
+      },
+      "@react-native-community/cli": {
+        "name": "@react-native-community/cli",
+        "severity": "high",
+        "isDirect": false,
+        "range": "4.13.0 - 9.3.5 || 11.0.2 - 11.4.0 || 12.0.0-alpha.0 - 12.3.5 || 13.0.0 - 13.5.2",
+        "fixAvailable": true
+      },
+      "@react-native-community/cli-doctor": {
+        "name": "@react-native-community/cli-doctor",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=10.2.5 || 11.0.0-alpha.0 - 11.4.0 || 12.0.0-alpha.0 - 12.3.5 || 13.0.0 - 13.5.2",
+        "fixAvailable": true
+      },
+      "@react-native-community/cli-hermes": {
+        "name": "@react-native-community/cli-hermes",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=10.2.0 || 11.0.0-alpha.0 - 11.4.0 || 12.0.0-alpha.0 - 12.3.5 || 13.0.0 - 13.5.2",
+        "fixAvailable": true
+      },
+      "body-parser": {
+        "name": "body-parser",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<1.20.3",
+        "fixAvailable": true
+      },
+      "braces": {
+        "name": "braces",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<3.0.3",
+        "fixAvailable": true
+      },
+      "cookie": {
+        "name": "cookie",
+        "severity": "low",
+        "isDirect": false,
+        "range": "<0.7.0",
+        "fixAvailable": true
+      },
+      "cross-spawn": {
+        "name": "cross-spawn",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<6.0.6 || >=7.0.0 <7.0.5",
+        "fixAvailable": true
+      },
+      "expo": {
+        "name": "expo",
+        "severity": "low",
+        "isDirect": false,
+        "range": "46.0.0-alpha.0 - 52.0.4",
+        "fixAvailable": true
+      },
+      "expo-pwa": {
+        "name": "expo-pwa",
+        "severity": "high",
+        "isDirect": false,
+        "range": ">=0.0.59-alpha.0",
+        "fixAvailable": true
+      },
+      "express": {
+        "name": "express",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=4.21.1 || 5.0.0-alpha.1 - 5.0.0",
+        "fixAvailable": true
+      },
+      "fast-loops": {
+        "name": "fast-loops",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<1.1.4",
+        "fixAvailable": true
+      },
+      "follow-redirects": {
+        "name": "follow-redirects",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<=1.15.5",
+        "fixAvailable": true
+      },
+      "http-proxy-middleware": {
+        "name": "http-proxy-middleware",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=2.0.8",
+        "fixAvailable": true
+      },
+      "ip": {
+        "name": "ip",
+        "severity": "high",
+        "isDirect": false,
+        "range": "*",
+        "fixAvailable": true
+      },
+      "micromatch": {
+        "name": "micromatch",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<4.0.8",
+        "fixAvailable": true
+      },
+      "nanoid": {
+        "name": "nanoid",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<3.3.8",
+        "fixAvailable": true
+      },
+      "path-to-regexp": {
+        "name": "path-to-regexp",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=0.1.11",
+        "fixAvailable": true
+      },
+      "react-native": {
+        "name": "react-native",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=0.0.0-20221027-2059-ba5454c42 || 0.69.0-rc.0 - 0.70.15 || 0.72.0-rc.0 - 0.72.10 || 0.73.0-nightly-20230506-1af868c52 - 0.73.4 || 0.74.0-nightly-20231003-5dedf277c - 0.74.0-rc.9 || >=0.80.0-nightly-20250305-f5feb7302",
+        "fixAvailable": true
+      },
+      "semver": {
+        "name": "semver",
+        "severity": "high",
+        "isDirect": false,
+        "range": "7.0.0 - 7.5.1",
+        "fixAvailable": true
+      },
+      "send": {
+        "name": "send",
+        "severity": "low",
+        "isDirect": false,
+        "range": "<0.19.0",
+        "fixAvailable": true
+      },
+      "serialize-javascript": {
+        "name": "serialize-javascript",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "6.0.0 - 6.0.1",
+        "fixAvailable": true
+      },
+      "serve-static": {
+        "name": "serve-static",
+        "severity": "low",
+        "isDirect": false,
+        "range": "<=1.16.0",
+        "fixAvailable": true
+      },
+      "tar": {
+        "name": "tar",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<6.2.1",
+        "fixAvailable": true
+      },
+      "webpack": {
+        "name": "webpack",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "5.0.0-alpha.0 - 5.93.0",
+        "fixAvailable": true
+      },
+      "webpack-dev-middleware": {
+        "name": "webpack-dev-middleware",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=5.3.3",
+        "fixAvailable": true
+      },
+      "ws": {
+        "name": "ws",
+        "severity": "high",
+        "isDirect": false,
+        "range": "6.0.0 - 6.2.2 || 7.0.0 - 7.5.9 || 8.0.0 - 8.17.0",
+        "fixAvailable": true
+      }
+    }
+  },
+  "backend/package-lock.json": {
+    "package-lock.json": {
+      "axios": {
+        "name": "axios",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=0.29.0",
+        "fixAvailable": true
+      },
+      "body-parser": {
+        "name": "body-parser",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<1.20.3",
+        "fixAvailable": true
+      },
+      "braces": {
+        "name": "braces",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<3.0.3",
+        "fixAvailable": true
+      },
+      "cookie": {
+        "name": "cookie",
+        "severity": "low",
+        "isDirect": false,
+        "range": "<0.7.0",
+        "fixAvailable": true
+      },
+      "express": {
+        "name": "express",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=4.21.1 || 5.0.0-alpha.1 - 5.0.0",
+        "fixAvailable": true
+      },
+      "follow-redirects": {
+        "name": "follow-redirects",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<=1.15.5",
+        "fixAvailable": true
+      },
+      "ocr-space-api-wrapper": {
+        "name": "ocr-space-api-wrapper",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=2.1.2 || >=2.2.0",
+        "fixAvailable": true
+      },
+      "path-to-regexp": {
+        "name": "path-to-regexp",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=0.1.11",
+        "fixAvailable": true
+      },
+      "send": {
+        "name": "send",
+        "severity": "low",
+        "isDirect": false,
+        "range": "<0.19.0",
+        "fixAvailable": true
+      },
+      "serve-static": {
+        "name": "serve-static",
+        "severity": "low",
+        "isDirect": false,
+        "range": "<=1.16.0",
+        "fixAvailable": true
+      }
+    }
+  },
+  "frontend/package-lock.json": {
+    "package-lock.json": {
+      "@babel/helpers": {
+        "name": "@babel/helpers",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<7.26.10",
+        "fixAvailable": true
+      },
+      "cross-spawn": {
+        "name": "cross-spawn",
+        "severity": "high",
+        "isDirect": false,
+        "range": "7.0.0 - 7.0.4",
+        "fixAvailable": true
+      },
+      "es5-ext": {
+        "name": "es5-ext",
+        "severity": "low",
+        "isDirect": false,
+        "range": "0.10.1 - 0.10.62",
+        "fixAvailable": true
+      },
+      "esbuild": {
+        "name": "esbuild",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<=0.24.2",
+        "fixAvailable": true
+      },
+      "nanoid": {
+        "name": "nanoid",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<3.3.8",
+        "fixAvailable": true
+      },
+      "pdfjs-dist": {
+        "name": "pdfjs-dist",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=4.1.392",
+        "fixAvailable": true
+      },
+      "react-pdf": {
+        "name": "react-pdf",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=8.0.2",
+        "fixAvailable": true
+      },
+      "rollup": {
+        "name": "rollup",
+        "severity": "high",
+        "isDirect": false,
+        "range": "3.0.0 - 3.29.4",
+        "fixAvailable": true
+      },
+      "tar": {
+        "name": "tar",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<6.2.1",
+        "fixAvailable": true
+      },
+      "vite": {
+        "name": "vite",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=6.1.5",
+        "fixAvailable": true
+      }
+    }
+  }
+}

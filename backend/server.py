@@ -7,7 +7,7 @@ import os
 from pydantic import BaseModel
 from github_scanner import RepoFileFetcher
 from find_vulnerabilities import find_vulnerabilities
-
+from check_packages import check_packages
 class RepositoryRequest(BaseModel):
     url: str
 
@@ -41,6 +41,8 @@ async def get_vulnerabilities(repo: RepositoryRequest = Body(...)):
             
         vulnerabilities["repositoryUrl"] = repo.url
         vulnerabilities["scanDate"] = os.path.getmtime(vulnerabilities_path)
+
+    
         return JSONResponse(content=vulnerabilities)
     
     except Exception as e:
