@@ -1,8 +1,7 @@
 {
   "repositoryName": "Secure Code Repository",
   "scanDate": "2025-04-27T03:14:39.673587+00:00Z",
-  "num_files": 19,
-  "files": [
+  "issues": [
     {
       "id": 1,
       "fileName": "slugrush_backend/database.py",

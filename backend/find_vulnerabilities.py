@@ -161,10 +161,9 @@ async def find_vulnerabilities(input_file, output_file=None):
 
     # Wrap results in repository format
     result_data = {
-        "repositoryName": "Secure Code Repository",  # Add your repository name here
+        "repositoryName": "TEMP",  # Add your repository name here
         "scanDate": datetime.now(timezone.utc).isoformat() + "Z",
-        "num_files": file_data["num_files"],
-        "files": all_vulnerabilities
+        "issues": all_vulnerabilities
     }
 
     if output_file:
