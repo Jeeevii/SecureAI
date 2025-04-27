@@ -170,3 +170,6 @@ web/.yarn/*
 # Docusaurus
 .docusaurus
 .cache-loader
+
+test*.json
+vulnerabilities.json
