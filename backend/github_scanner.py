@@ -21,11 +21,11 @@ class RepoFileFetcher:
         '.php', '.phtml', '.php3', '.php4', '.php5',
         '.swift', '.m', '.mm',
         '.sh', '.bash', '.zsh', '.fish',
-        '.json', '.yaml', '.yml', '.toml', '.xml', '.ini', '.config',
+        '.yaml', '.yml', '.toml', '.xml', '.ini', '.config',
         'Dockerfile', '.dockerfile', '.dockerignore',
-        '.sql', '.graphql', '.proto', '.md',
+        '.sql', '.graphql', '.proto',
     }
-    DEFAULT_IGNORE_DIRS = {'node_modules', '.git', '.md', '.pdf', '.css'}
+    DEFAULT_IGNORE_DIRS = {'node_modules', '.git', '.md', '.pdf', '.css', '.json'}
 
     def __init__(self, repo_url, output='repo_files.json'):
         self.owner, self.repo = self._parse_github_url(repo_url)
@@ -131,7 +131,7 @@ def main():
         description="Fetch allowed files from a GitHub repo and write sanitized contents to JSON."
     )
     parser.add_argument('repo_url', help="e.g. https://github.com/owner/repo")
-    parser.add_argument('-o', '--output', default='repo_files.json',
+    parser.add_argument('-o', '--output', default='json_output/repo_files.json',
                         help="Output JSON file (default: repo_files.json)")
     args = parser.parse_args()
     try:

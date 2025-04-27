@@ -1,11 +1,12 @@
 import os
 import json
 import asyncio
-from datetime import datetime, timezone
 from dotenv import load_dotenv
 import google.generativeai as genai
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from tenacity import retry, wait_random_exponential, stop_after_attempt
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone
 
 # Load environment variables
 load_dotenv()
@@ -20,6 +21,7 @@ CHUNK_SIZE = 8000
 CHUNK_OVERLAP = 500
 CONTEXT_TAIL_LINES = 15
 CONCURRENCY_LIMIT = 3
+LARGE_FILE_SIZE_THRESHOLD = 5000  # Consider files larger than 5000 lines as large
 
 # --- Text Splitter Setup ---
 splitter = RecursiveCharacterTextSplitter(
@@ -136,7 +138,19 @@ async def find_vulnerabilities(input_file, output_file=None):
     all_vulnerabilities = []
     semaphore = asyncio.Semaphore(CONCURRENCY_LIMIT)
 
-    tasks = [sem_task(semaphore, analyze_file, file_info) for file_info in file_data]
+    # Split files into large and small, prioritize large files
+    large_files = [file_info for file_info in file_data["files"] if len(file_info["contents"].splitlines()) > LARGE_FILE_SIZE_THRESHOLD]
+    small_files = [file_info for file_info in file_data["files"] if len(file_info["contents"].splitlines()) <= LARGE_FILE_SIZE_THRESHOLD]
+
+    # Process large files with dedicated threads
+    with ThreadPoolExecutor(max_workers=CONCURRENCY_LIMIT) as executor:
+        futures = [executor.submit(analyze_file, file_info) for file_info in large_files]
+        for future in futures:
+            result = await future
+            all_vulnerabilities.extend(result)
+
+    # Process small files with semaphore-controlled concurrency
+    tasks = [sem_task(semaphore, analyze_file, file_info) for file_info in small_files]
     results = await asyncio.gather(*tasks)
 
     for file_vulns in results:
@@ -145,19 +159,21 @@ async def find_vulnerabilities(input_file, output_file=None):
     for idx, vuln in enumerate(all_vulnerabilities, 1):
         vuln["id"] = idx
 
-    output_data = {
-        "repositoryName": os.getenv("REPOSITORY_NAME", "UnknownRepo"),
+    # Wrap results in repository format
+    result_data = {
+        "repositoryName": "Secure Code Repository",  # Add your repository name here
         "scanDate": datetime.now(timezone.utc).isoformat() + "Z",
-        "issues": all_vulnerabilities
+        "num_files": file_data["num_files"],
+        "files": all_vulnerabilities
     }
 
     if output_file:
         with open(output_file, 'w') as f:
-            json.dump(output_data, f, indent=2)
+            json.dump(result_data, f, indent=2)
     else:
-        print(json.dumps(output_data, indent=2))
+        print(json.dumps(result_data, indent=2))
 
-    return output_data
+    return all_vulnerabilities
 
 # --- CLI Entry Point ---
 def main():
