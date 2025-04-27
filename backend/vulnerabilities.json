@@ -1,22 +1,46 @@
-[
-  {
-    "fileName": "index.html",
-    "lineNumber": 20,
-    "issueType": "Insecure data handling",
-    "severity": "High",
-    "description": "The login form does not perform any validation or server check. This means that anyone can 'log in' with any username or password.",
-    "codeSnippet": "document.getElementById('loginForm').addEventListener('submit', function(e) {\n            e.preventDefault();\n            var username = document.getElementById('username').value;\n            var password = document.getElementById('password').value;\n            alert('Logged in as ' + username);\n        });",
-    "suggestedFix": "Implement server-side validation and authentication. The server should check the username and password against a database of valid users. If the login is valid, the server should return a session token. If the login is invalid, the server should return an error message.",
-    "id": 1
-  },
-  {
-    "fileName": "index.html",
-    "lineNumber": 26,
-    "issueType": "Potential cross-site scripting (XSS)",
-    "severity": "High",
-    "description": "The search function does not sanitize user input before inserting it into the page. This could allow an attacker to inject malicious scripts into the page.",
-    "codeSnippet": "function search() {\n            var query = document.getElementById('searchBox').value;\n            document.getElementById('results').innerHTML = 'You searched for: ' + query;\n        }",
-    "suggestedFix": "Sanitize user input before inserting it into the page. This can be done using a library like DOMPurify, or by creating a text node with the user input and appending it to the results div.",
-    "id": 2
-  }
-]
+{
+  "repositoryName": "example-repo",
+  "scanDate": "2023-04-21T14:30:00Z",
+  "issues": [
+    {
+      "id": 1,
+      "fileName": "app.py",
+      "lineNumber": 42,
+      "issueType": "Hardcoded API Key",
+      "severity": "high",
+      "description": "API key directly embedded in the source code. This poses a security risk as credentials could be exposed in version control systems.",
+      "codeSnippet": "api_key = 'sk-1234567890abcdef1234'\nresponse = openai.Completion.create(api_key=api_key)",
+      "suggestedFix": "# Use environment variables instead\nimport os\napi_key = os.environ.get('OPENAI_API_KEY')\nresponse = openai.Completion.create(api_key=api_key)"
+    },
+    {
+      "id": 2,
+      "fileName": "server.js",
+      "lineNumber": 78,
+      "issueType": "Prompt Injection Vulnerability",
+      "severity": "high",
+      "description": "User input is directly concatenated into the prompt without proper sanitization, potentially allowing prompt injection attacks.",
+      "codeSnippet": "const userInput = req.body.input;\nconst prompt = `Answer this question: ${userInput}`;\nconst response = await model.generate(prompt);",
+      "suggestedFix": "const userInput = req.body.input;\n// Sanitize and validate user input\nconst sanitizedInput = sanitizeInput(userInput);\n// Use structured prompts with clear boundaries\nconst prompt = { \n  system: \"You are a helpful assistant.\",\n  user: sanitizedInput\n};\nconst response = await model.generate(prompt);"
+    },
+    {
+      "id": 3,
+      "fileName": "Dockerfile",
+      "lineNumber": 15,
+      "issueType": "Insecure Docker Configuration",
+      "severity": "medium",
+      "description": "Container is running as root, which could allow attackers to gain elevated privileges if they manage to escape the container.",
+      "codeSnippet": "FROM python:3.9\nWORKDIR /app\nCOPY . .\nRUN pip install -r requirements.txt\nCMD [\"python\", \"app.py\"]",
+      "suggestedFix": "FROM python:3.9-slim\nWORKDIR /app\nCOPY . .\nRUN pip install -r requirements.txt\n# Create non-root user\nRUN adduser --disabled-password --gecos '' appuser\nUSER appuser\nCMD [\"python\", \"app.py\"]"
+    },
+    {
+      "id": 4,
+      "fileName": "routes/api.js",
+      "lineNumber": 127,
+      "issueType": "Missing Rate Limiting",
+      "severity": "low",
+      "description": "The API endpoint lacks rate limiting, making it susceptible to abuse and potential denial-of-service attacks.",
+      "codeSnippet": "app.post('/generate', async (req, res) => {\n  const result = await llmService.generate(req.body);\n  res.json(result);\n});",
+      "suggestedFix": "const rateLimit = require('express-rate-limit');\n\nconst apiLimiter = rateLimit({\n  windowMs: 15 * 60 * 1000, // 15 minutes\n  max: 100, // Limit each IP to 100 requests per windowMs\n  standardHeaders: true,\n  message: 'Too many requests, please try again later.'\n});\n\napp.post('/generate', apiLimiter, async (req, res) => {\n  const result = await llmService.generate(req.body);\n  res.json(result);\n});"
+    }
+  ]
+}
