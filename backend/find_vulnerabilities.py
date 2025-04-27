@@ -132,7 +132,7 @@ async def sem_task(semaphore, task_func, *args):
     async with semaphore:
         return await task_func(*args)
 
-async def find_vulnerabilities(input_file, output_file=None):
+async def find_vulnerabilities(input_file, output_file="json_output/vulnerabilities.json"):
     if output_file:
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
         
@@ -159,7 +159,8 @@ async def find_vulnerabilities(input_file, output_file=None):
         vuln["id"] = idx
 
     result_data = {
-        "issues": all_vulnerabilities
+        "issues": all_vulnerabilities,
+        "malware": [],
     }
 
     if output_file:
