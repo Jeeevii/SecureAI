@@ -61,7 +61,7 @@ const securityIssues = [
     suggestedFix: String, // Suggested fix for the issue
   }
   ]
-  packages: {
+  packagesVulnerabilities: {
     node: {
       filepath: {
         [
