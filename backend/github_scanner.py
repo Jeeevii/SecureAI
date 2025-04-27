@@ -58,7 +58,6 @@ class RepoFileFetcher:
         return [item for item in tree if item.get('type') == 'blob']
 
     def _is_allowed(self, path):
-        # Skip ignored directories and filter by extension
         if any(part in self.ignore_dirs for part in path.split('/')):
             return False
         _, ext = os.path.splitext(path)
@@ -78,7 +77,7 @@ class RepoFileFetcher:
 
     @staticmethod
     def _sanitize_content(text):
-        return text.replace('\r\n', ' ').replace('\n', ' ').replace('\r', ' ')
+        return text
 
     def fetch_file_data(self, idx, item):
         path = item.get('path')
@@ -95,13 +94,11 @@ class RepoFileFetcher:
         except requests.HTTPError:
             content = ''
             file_size = 0
-        
         return {'id': idx, 'path': path, 'contents': content, 'file_size': file_size}
 
     def fetch(self):
         files = self._get_all_files()
         data = []
-
         with ThreadPoolExecutor() as executor:
             futures = [executor.submit(self.fetch_file_data, idx + 1, item) for idx, item in enumerate(files)]
             for future in futures:
@@ -125,7 +122,7 @@ class RepoFileFetcher:
         # start_time = time.time()
         data = self.fetch()
         self.write_json(data)
-        # elapsed_time = time.time() - start_time  # Calculate elapsed time
+        # elapsed_time = time.time() - start_time
         print(f"Wrote {len(data)} entries to {self.output}")
         # print(f"Total time taken: {elapsed_time:.2f} seconds")
 
