@@ -56,7 +56,7 @@ export default function ScanningPage() {
         
         // Mark scan as complete
         scanCompleteRef.current = true
-        
+        console.log("Vulnerabilities fetched successfully:", data)
         // Set progress to 100% which will trigger redirection
         setProgress(100)
       } catch (error) {

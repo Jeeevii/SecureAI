@@ -14,6 +14,7 @@ type GroupByType = 'none' | 'severity' | 'file';
 
 export default function ResultsPage() {
   const [securityIssues, setSecurityIssues] = useState<SecurityIssue[]>([]);
+  const [packageIssues, setPackageIssues] = useState<SecurityIssue[]>([]);
   const [repositoryUrl, setRepositoryUrl] = useState("");
   const [groupBy, setGroupBy] = useState<GroupByType>('none');
   const router = useRouter();

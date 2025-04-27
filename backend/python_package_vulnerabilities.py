@@ -84,6 +84,44 @@ def scan_and_extract(output_path: str = os.path.join("json_output", "safety.json
         json.dump(simplified, f, indent=2)
     return simplified
 
+
+def parse_requirements_string(requirements_content: str) -> list:
+    """
+    Parse a requirements.txt string content and return a list of requirement specs.
+    """
+    tokens = re.split(r"\s+", requirements_content.strip())
+    return [t for t in tokens if t and not t.startswith("#")]
+
+def scan_requirements_string(requirements_content: str) -> dict:
+    """
+    Analyze a requirements string for vulnerabilities and return the results as a dict.
+    
+    Args:
+        requirements_content: String content of requirements.txt
+        
+    Returns:
+        A dict containing the simplified vulnerability data
+    """
+    reqs = parse_requirements_string(requirements_content)
+    
+    if not reqs:
+        return {"vulnerabilities": []}
+    
+    raw = run_safety(reqs)
+    try:
+        parser = SafetyReportParser(raw)
+    except TypeError:
+        # Create a temporary file for parsing if needed
+        temp_path = os.path.join("json_output", "temp_safety.json")
+        os.makedirs(os.path.dirname(temp_path), exist_ok=True)
+        with open(temp_path, 'w', encoding='utf-8') as f:
+            f.write(raw)
+        parser = SafetyReportParser.from_file(temp_path)
+        os.remove(temp_path)
+    
+    simplified = parser.get_vulnerabilities()
+    return {"vulnerabilities": simplified}
+
 if __name__ == '__main__':
     import argparse
     cli = argparse.ArgumentParser(
@@ -96,5 +134,4 @@ if __name__ == '__main__':
     )
     args = cli.parse_args()
     simplified = scan_and_extract(args.output)
-    print(f"✅ Output written to {args.output}")
-    print(json.dumps(simplified, indent=2))
+    print(f" Output written to {args.output}")
