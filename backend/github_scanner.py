@@ -26,7 +26,7 @@ NORMAL_EXTENSIONS = {
     '.sql', '.graphql', '.proto'
 }
 BINARY_EXTENSIONS = {'.exe', '.dll', '.sys', '.bin', '.dat', '.msi', '.apk', '.so', '.dmg'}
-IGNORE_DIRS = {'node_modules', '.git', '.md', '.pdf', '.css', '.json'}
+IGNORE_DIRS = {'node_modules', '.git', '.md', '.pdf', '.css', '.json', '.gitignore', '.gitattributes'}
 
 # ===== Utility =====
 def sha256_file(url, hash_algorithm="sha256"):
@@ -73,7 +73,8 @@ class RepoFileFetcher:
         return r.json().get('tree', [])
 
     def _is_ignored(self, path):
-        return any(part in self.ignore_dirs for part in path.split('/'))
+        parts = path.split('/')
+        return any(part in self.ignore_dirs for part in parts)
 
     def _is_allowed(self, path):
         _, ext = os.path.splitext(path)
