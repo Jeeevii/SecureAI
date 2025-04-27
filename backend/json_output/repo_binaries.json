@@ -1,0 +1,636 @@
+{
+  "repositoryName": "malware-samples",
+  "scanDate": "2025-04-27T00:42:16.213528Z",
+  "binaries": [
+    {
+      "id": 1,
+      "fileName": "8200755cbedd6f15eecd8207eba534709a01957b172d7a051b9cc4769ddbf233.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Adylkuzz/8200755cbedd6f15eecd8207eba534709a01957b172d7a051b9cc4769ddbf233.zip",
+      "sha256": "0b60463468b744f72f50c20f7f8e5ad0801e86123f22d770b8cef64c7ef53caa"
+    },
+    {
+      "id": 2,
+      "fileName": "29c7e87350cb03428fc108b03856095b.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Allaple/29c7e87350cb03428fc108b03856095b.7z",
+      "sha256": "1348f7a005e008bce6dd05e9e747f7f12190994d3ec15379489c169269ff2a60"
+    },
+    {
+      "id": 3,
+      "fileName": "49cccd30a564410d1f9bbce89fa15890.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Allaple/49cccd30a564410d1f9bbce89fa15890.zip",
+      "sha256": "97e3fb3fb0b77ba5ecce0d1d10d6408e3316baff66d7893605aab190578bafa1"
+    },
+    {
+      "id": 4,
+      "fileName": "b17911ddeab973db51362721c940d882.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Allaple/b17911ddeab973db51362721c940d882.7z",
+      "sha256": "e36cfd96cc919072ed8f055e807662e6d7239908e340a0a25d57569d0b7028ea"
+    },
+    {
+      "id": 5,
+      "fileName": "02ca4397da55b3175aaa1ad2c99981e792f66151.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Bitcoin miners/02ca4397da55b3175aaa1ad2c99981e792f66151.zip",
+      "sha256": "fb6e7c535103161ad907f9ce892ca0f33bd07e4e49c21834c3880212dbd5e053"
+    },
+    {
+      "id": 6,
+      "fileName": "022aeb126d2d80e683f7f2a3ee920874.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Downloader-CUZ/022aeb126d2d80e683f7f2a3ee920874.zip",
+      "sha256": "c31f8475394784c03c9fea88b77c2056e892fe39adc38347bc56414e21a2e1cf"
+    },
+    {
+      "id": 7,
+      "fileName": "smb-7teux2sm.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Downloader-CUZ/smb-7teux2sm.zip",
+      "sha256": "542189e321cb0c3a7d0b25ebdb4d9926e0770e49c30791264855b0b9152a95ab"
+    },
+    {
+      "id": 8,
+      "fileName": "smb-onil0o36.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Downloader-CUZ/smb-onil0o36.zip",
+      "sha256": "7e829dee117892c06a095c76c0c6d210550bd3372300d26d96b141a2e3629d5f"
+    },
+    {
+      "id": 9,
+      "fileName": "cf8533849ee5e82023ad7adbdbd6543cb6db596c53048b1a0c00b3643a72db30.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/EternalRocks/cf8533849ee5e82023ad7adbdbd6543cb6db596c53048b1a0c00b3643a72db30.zip",
+      "sha256": "66dcdc7e16a2ab92f41580667c5a7e9c8b22da293290fd198cfb2aa004292cba"
+    },
+    {
+      "id": 10,
+      "fileName": "149979213411fcac20f7cbc1a26e1521b80073aff05d4c0f967046ef5f23b13a.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Generic Trojan/149979213411fcac20f7cbc1a26e1521b80073aff05d4c0f967046ef5f23b13a.zip",
+      "sha256": "043bc5f8da479077084c4ec75e5c1182254366d135373059906bb6fed0bf5148"
+    },
+    {
+      "id": 11,
+      "fileName": "5b2aa53001c0884222bebf931b8235e80cc798c46e3e28c5a4026ccd5590fabf.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Generic Trojan/5b2aa53001c0884222bebf931b8235e80cc798c46e3e28c5a4026ccd5590fabf.zip",
+      "sha256": "16922b999d861d5f0755bd4ce134cc71af6308fee16989fa98e449fc9fa0433a"
+    },
+    {
+      "id": 12,
+      "fileName": "786ab616239814616642ba4438df78a9.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Generic Trojan/786ab616239814616642ba4438df78a9.zip",
+      "sha256": "7054f0fc4f068acc20f1ac31c46457bcba08c08a10a781372b7bd3b8c6591caa"
+    },
+    {
+      "id": 13,
+      "fileName": "fa73963e516d9be0cc8ae60d7a1cd8bc6ac01f464b2c772ddb97739d4d1ff38d.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Generic Trojan/fa73963e516d9be0cc8ae60d7a1cd8bc6ac01f464b2c772ddb97739d4d1ff38d.zip",
+      "sha256": "495a459881560883953012cec282045c1f388aef5f367c18d1e211adbf3e04ff"
+    },
+    {
+      "id": 14,
+      "fileName": "smb-1bd_c8y5.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Generic Trojan/smb-1bd_c8y5.7z",
+      "sha256": "06a8370354d3fc8651382c54b59a8cb71be0fd34b079b7d4109efe9a1df35370"
+    },
+    {
+      "id": 15,
+      "fileName": "smb-b_8ti77_.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Generic Trojan/smb-b_8ti77_.zip",
+      "sha256": "370dbbcf8dcdeacf63a821d3a006c01da79fed3c309f88ec3c8b7764924645da"
+    },
+    {
+      "id": 16,
+      "fileName": "smb-id9dl67p.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Generic Trojan/smb-id9dl67p.zip",
+      "sha256": "eafdc4caa5ac65712979899d30dba4683b4fedbb4c6b19cc1c673b87efcfb789"
+    },
+    {
+      "id": 17,
+      "fileName": "smb-37n0gip7.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Muldrop/smb-37n0gip7.7z",
+      "sha256": "ca7cb2bd87b622738cd898710d69bfd79e3b7602f3395e9f2c72f9ea49b15cb5"
+    },
+    {
+      "id": 18,
+      "fileName": "smb-e7_udot9.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Muldrop/smb-e7_udot9.7z",
+      "sha256": "fd39137c11daf4d8c11cd8694e25573eb840db8e9f7f17266708b49d955c2d4c"
+    },
+    {
+      "id": 19,
+      "fileName": "smb-ncqut0ao.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Muldrop/smb-ncqut0ao.7z",
+      "sha256": "24dd7e5726cca55aa41a3a93dc5b26c667221f26d6a4f9a067d9abdacdcb7eb1"
+    },
+    {
+      "id": 20,
+      "fileName": "smb-zlm7d8hi.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Muldrop/smb-zlm7d8hi.7z",
+      "sha256": "4d97c4b40bb0d1e0a7d27f01f4f6d348c4041135f99190987a9f18b8218d6b8e"
+    },
+    {
+      "id": 21,
+      "fileName": "Pepex-B.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Pepex/Pepex-B.7z",
+      "sha256": "fbd46c0ba42cc0bb4ee6e5f359c0f5c2c4499e09fbb7855904c9fdbecc64e738"
+    },
+    {
+      "id": 22,
+      "fileName": "Pepex-M.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Pepex/Pepex-M.7z",
+      "sha256": "00521f3d6f2c7c75972591ddc8549ddd535af8f8ca31957425f788624305c17d"
+    },
+    {
+      "id": 23,
+      "fileName": "Pepex-M2.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Pepex/Pepex-M2.7z",
+      "sha256": "b1ea7e47ed79202977abf73f1c53929d90a351258dc417a9b78ecc77ac5184ec"
+    },
+    {
+      "id": 24,
+      "fileName": "Pepex-M3.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Pepex/Pepex-M3.7z",
+      "sha256": "c1f3339c69d76d891d01564f23eedf195b2c82ef1bea7a015865523c6fac78cc"
+    },
+    {
+      "id": 25,
+      "fileName": "Pepex-b2.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Pepex/Pepex-b2.7z",
+      "sha256": "fddd06852b554f2858341788d71d181fd28acd4339ea52bed553ea9dac4e4cc1"
+    },
+    {
+      "id": 26,
+      "fileName": "Pepex-b3.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Pepex/Pepex-b3.7z",
+      "sha256": "ff6692072587ab0b04a79586242b5cb96ecc807063abfeadd44babe7176e1d02"
+    },
+    {
+      "id": 27,
+      "fileName": "Pepex-b4.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Pepex/Pepex-b4.7z",
+      "sha256": "18d0b7477f053b1ac5a164c1975c70edd76f96586b514e2ea70f4cb42ae1fce5"
+    },
+    {
+      "id": 28,
+      "fileName": "Pepex-b5.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Pepex/Pepex-b5.7z",
+      "sha256": "0c6c11a76d6352c20c654110dfca2e5df660ee189ef1b1d95152a5f3ecf7a354"
+    },
+    {
+      "id": 29,
+      "fileName": "Pepex-b6.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Pepex/Pepex-b6.7z",
+      "sha256": "aaf653c3dbb420429b6411270e42d5e5390df8f676c4079b1ce3ccb4145861f9"
+    },
+    {
+      "id": 30,
+      "fileName": "Pepex-b7.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Pepex/Pepex-b7.7z",
+      "sha256": "94015caa3459ed6eb03564b9b231ed7dead63c230ac9bef6fbf9611d6364174c"
+    },
+    {
+      "id": 31,
+      "fileName": "smb-5ebgzza0.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Pepex/smb-5ebgzza0.7z",
+      "sha256": "ad20ae0224b45bd5348cfcd12ebd7167ced48efcc0d363926714017263dee8e3"
+    },
+    {
+      "id": 32,
+      "fileName": "smb-__lltt96.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Pepex/smb-__lltt96.7z",
+      "sha256": "2af07ba65a6ed083b72678224e3f74353400410888e40db610de02713051767c"
+    },
+    {
+      "id": 33,
+      "fileName": "86e0eac8c5ce70c4b839ef18af5231b5f92e292b81e440193cdbdc7ed108049f.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/$ucyLocker/86e0eac8c5ce70c4b839ef18af5231b5f92e292b81e440193cdbdc7ed108049f.zip",
+      "sha256": "c3ae24dd6b0e570611ea13b4f24e3b50ce0c6906c9ce3ba72105e4c91a660b1c"
+    },
+    {
+      "id": 34,
+      "fileName": "1d4322dbad293847de14eca09bee5056eaede7ce178490e101642bf1f5875e37.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/1d4322dbad293847de14eca09bee5056eaede7ce178490e101642bf1f5875e37.zip",
+      "sha256": "58038ba64962ce0ba94e0e0c4dc0356e607d5a1a6aaa64662eb6731cb7e87ba5"
+    },
+    {
+      "id": 35,
+      "fileName": "grandcab.bin",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Grandcrab/grandcab.bin",
+      "sha256": "233437b647f9482a8a3ba51d0af69039bb58fb48609704a39db1f709a0e6aca6"
+    },
+    {
+      "id": 36,
+      "fileName": "027cc450ef5f8c5f653329641ec1fed91f694e0d229928963b30f6b0d7d3a745-20170707033827.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/NotPetya/027cc450ef5f8c5f653329641ec1fed91f694e0d229928963b30f6b0d7d3a745-20170707033827.zip",
+      "sha256": "2416260eadf0d674f89097a2d29083d7db3fcd2ed6758849c984cc325baaa0a8"
+    },
+    {
+      "id": 37,
+      "fileName": "4c1dc737915d76b7ce579abddaba74ead6fdb5b519a1ea45308b8c49b950655c (1)",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Petya/4c1dc737915d76b7ce579abddaba74ead6fdb5b519a1ea45308b8c49b950655c (1)",
+      "sha256": "4c1dc737915d76b7ce579abddaba74ead6fdb5b519a1ea45308b8c49b950655c"
+    },
+    {
+      "id": 38,
+      "fileName": "3Rd-LevelHexEatracted.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Satan/3Rd-LevelHexEatracted.7z",
+      "sha256": "c6d06e65924c10cb88343addeb1fd952e7411fec2634e4a50f2de9bbbf0c1571"
+    },
+    {
+      "id": 39,
+      "fileName": "satan.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Satan/satan.zip",
+      "sha256": "595e2825095b12ddfba4ee6f98f4f6cb1ff1fbc37a3b3191b2fc203d486ba163"
+    },
+    {
+      "id": 40,
+      "fileName": "146581f0b3fbe00026ee3ebe68797b0e57f39d1d8aecc99fdc3290e9cfadc4fc.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/UIWIX/146581f0b3fbe00026ee3ebe68797b0e57f39d1d8aecc99fdc3290e9cfadc4fc.zip",
+      "sha256": "a307a9e165d0bd0a539f5787cfc94c5abffd6f1924ff774452d72acb2a8bcf3a"
+    },
+    {
+      "id": 41,
+      "fileName": "32f24601153be0885f11d62e0a8a2f0280a2034fc981d8184180c5d3b1b9e8cf.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/32f24601153be0885f11d62e0a8a2f0280a2034fc981d8184180c5d3b1b9e8cf.zip",
+      "sha256": "cb6602ec77e62c6f9f37a762870ee8917211d05f9138cf161047842e0eef8092"
+    },
+    {
+      "id": 42,
+      "fileName": "697158bcade7373ccc9e52ea1171d780988fc845d2b696898654e18954578920.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/697158bcade7373ccc9e52ea1171d780988fc845d2b696898654e18954578920.zip",
+      "sha256": "d30cd1e5c765f6cb2ddfc16c8f1611ef575ef6b8fd7030930bca9433f8edbe25"
+    },
+    {
+      "id": 43,
+      "fileName": "ed01ebfbc9eb5bbea545af4d01bf5f1071661840480439c6e5babe8e080e41aa.bin.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/ed01ebfbc9eb5bbea545af4d01bf5f1071661840480439c6e5babe8e080e41aa.bin.zip",
+      "sha256": "219f4e1e62fa50d0e407a6ae5c49344e1a888f97e7131be118d6c312217e69cc"
+    },
+    {
+      "id": 44,
+      "fileName": "mssecsvc_0c694193ceac8bfb016491ffb534eb7c.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/mssecsvc_0c694193ceac8bfb016491ffb534eb7c.zip",
+      "sha256": "1bd50736a69035c57577b3534a88864b79b236b5b0e265051c41c150dd48ab81"
+    },
+    {
+      "id": 45,
+      "fileName": "mssecsvc_41b5ba4bf74e65845fa8c9861ca34508.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/mssecsvc_41b5ba4bf74e65845fa8c9861ca34508.zip",
+      "sha256": "c8c53f25f6118bb1645a12b198fe1cb8b99ceb417df5a1d0a210ac720fba33de"
+    },
+    {
+      "id": 46,
+      "fileName": "smb-0e89k3id.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-0e89k3id.zip",
+      "sha256": "060b8a227885388a7b9f821807e9c58555456a15579d380eb47d9a3c362b85ba"
+    },
+    {
+      "id": 47,
+      "fileName": "smb-3kn32w1v.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-3kn32w1v.zip",
+      "sha256": "bb8f0b0dcaf7a656a24b6ab92bb693a9b0231ba797eb11aabdfbe39cd0504ebb"
+    },
+    {
+      "id": 48,
+      "fileName": "smb-5cgc70g1.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-5cgc70g1.7z",
+      "sha256": "9f7a185d2633f9c279344540cb17c3802f4bd4e51c24470d8f35cc368dc46c31"
+    },
+    {
+      "id": 49,
+      "fileName": "smb-7rwkaozq.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-7rwkaozq.zip",
+      "sha256": "cecfc61b99a62ef90e9fd30ba1c51e86a7448f32f417c3e88632b85b6e6b19d5"
+    },
+    {
+      "id": 50,
+      "fileName": "smb-82rfim2h.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-82rfim2h.zip",
+      "sha256": "bda40b09b1c865f03ebdf7ae738fe5def09b5717e9738016c78a92530d77f572"
+    },
+    {
+      "id": 51,
+      "fileName": "smb-b4tq2hti.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-b4tq2hti.zip",
+      "sha256": "853af15aa9a2e12e88e80bbf1e78cb9650c1152aa9f75e990fdd7b6a6d38ca05"
+    },
+    {
+      "id": 52,
+      "fileName": "smb-d1674sc2.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-d1674sc2.zip",
+      "sha256": "5104a641086328185e0d41db0dffc8f16a68e06c459d77c377e510c4560c2362"
+    },
+    {
+      "id": 53,
+      "fileName": "smb-e0y16y2p.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-e0y16y2p.zip",
+      "sha256": "562490da2dc4bffc1d24b84e2138dede6c69194cc793f84a571d00d96d706d18"
+    },
+    {
+      "id": 54,
+      "fileName": "smb-fvd4o59p.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-fvd4o59p.zip",
+      "sha256": "7bfff759d3af458f238aee319e7fda631586e53a440086348656c454ba52ff96"
+    },
+    {
+      "id": 55,
+      "fileName": "smb-gab_1g0l.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-gab_1g0l.zip",
+      "sha256": "f7aae45df24c828753e769ef66b7527bbf227a50ea263e3b031e667898e016d4"
+    },
+    {
+      "id": 56,
+      "fileName": "smb-gv5k5anv.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-gv5k5anv.zip",
+      "sha256": "d3ec0ecf3aad1eed7ce2f17fd166d424c162f8c008d72051eff1093bd7a9c95d"
+    },
+    {
+      "id": 57,
+      "fileName": "smb-ij2n4cyd.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-ij2n4cyd.zip",
+      "sha256": "ba8590d846de3d959ae39d650d08eed7dad40fd491e6568f24b7a84e8efa9990"
+    },
+    {
+      "id": 58,
+      "fileName": "smb-jfpzku0b.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-jfpzku0b.zip",
+      "sha256": "3d13060fe721f81ea7d27a7c1b5bbffaf27ca2a9fdf43c123be3d45e6b86e9b5"
+    },
+    {
+      "id": 59,
+      "fileName": "smb-kmnr7qja.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-kmnr7qja.zip",
+      "sha256": "fbdb6667e33091a7ded57feb84e2050ecb6e141dd6543d2b07a60f2ea70022f1"
+    },
+    {
+      "id": 60,
+      "fileName": "smb-lyqgstbu.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-lyqgstbu.zip",
+      "sha256": "75bc1408788422d9058cab0a542e02df28779a4c02587665af8c78b494a7c8d8"
+    },
+    {
+      "id": 61,
+      "fileName": "smb-oat1c4ef.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-oat1c4ef.zip",
+      "sha256": "10d2a591d6fd563185fa1e44dae60b6a65962616e3aaf56a9ec353fa34466739"
+    },
+    {
+      "id": 62,
+      "fileName": "smb-oc35cajn.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-oc35cajn.zip",
+      "sha256": "7a77b98b1352b3fec82bb3d075b4e50f5dc096505490c1fab92030db6b5c30dd"
+    },
+    {
+      "id": 63,
+      "fileName": "smb-ojjfqxul.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-ojjfqxul.zip",
+      "sha256": "4d274e872953afd207ea60d339dbeb91f6c3cfe28deb8a65b7f7fc89989f5837"
+    },
+    {
+      "id": 64,
+      "fileName": "smb-tkas_857.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-tkas_857.zip",
+      "sha256": "c7f145b3866fd42f8bda0881dea72d5ebfdb87521b91e7ea9e5419b3fd89fa75"
+    },
+    {
+      "id": 65,
+      "fileName": "smb-vasyl9yj.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-vasyl9yj.zip",
+      "sha256": "d734de484911803fb821a9bce34b775aa83a20b9eaac014e41ea34ee3a24add7"
+    },
+    {
+      "id": 66,
+      "fileName": "smb-y16ftv9_.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-y16ftv9_.zip",
+      "sha256": "3e1c97ea92c8b19c9dc64804a3e91a563a254e84a010774bd0e13388e85e68f5"
+    },
+    {
+      "id": 67,
+      "fileName": "smb-z7uhqxx6.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Ransomware/Wannacry/smb-z7uhqxx6.zip",
+      "sha256": "8125b8dfffa9e21b8dce873b091fec82505458951cdb7d0fe35e4a42e97d9e68"
+    },
+    {
+      "id": 68,
+      "fileName": "Rbot-O.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Rbot/Rbot-O.7z",
+      "sha256": "a96181997bfe6e3dea689a9f8ca59f04edd352fe1c6993d0334fecc9d6ff28f5"
+    },
+    {
+      "id": 69,
+      "fileName": "smb-2leu2nil.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Rbot/smb-2leu2nil.7z",
+      "sha256": "990376c699a5e8d34783cd1d7228281b68ec2a1cef2d5735433e65b66ece968e"
+    },
+    {
+      "id": 70,
+      "fileName": "smb-ts5zof3r.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Rbot/smb-ts5zof3r.7z",
+      "sha256": "152b7c410bd4067295aa87b3edc91bfb8a7cdfe68ab98de729273b10eaddacd2"
+    },
+    {
+      "id": 71,
+      "fileName": "28247211d1eb08370aa363f08821a653.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/SdBot/28247211d1eb08370aa363f08821a653.zip",
+      "sha256": "e9dc91fd4535552ec9b7a2ca6d8c99010e2d64fb4563e30615472039446f9a1e"
+    },
+    {
+      "id": 72,
+      "fileName": "smb-9ai6oshz.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Shodi/smb-9ai6oshz.7z",
+      "sha256": "0b06a60e066735f0e1a749c86a09793e428143668311f856a5b6ca0f362efbd9"
+    },
+    {
+      "id": 73,
+      "fileName": "Paypal.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Spam/Paypal/Paypal.zip",
+      "sha256": "3e5ac22cc012f4db06e208f26782f682fa97afc7250d4a472ceee9c6ed50bfe2"
+    },
+    {
+      "id": 74,
+      "fileName": "smb-qua22o4u.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Virut/smb-qua22o4u.7z",
+      "sha256": "9849e33e978278070075328520663c618f05d02aad5f1fc802c68af354d44ab1"
+    },
+    {
+      "id": 75,
+      "fileName": "WisdomEyes.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Wisdomeyes/WisdomEyes.7z",
+      "sha256": "e87a61c253467a65b36a7531908aec0109a81cf12f173e0752af702601db6e29"
+    },
+    {
+      "id": 76,
+      "fileName": "smb-6j9cg2g0.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Wisdomeyes/smb-6j9cg2g0.7z",
+      "sha256": "415adf501be1ecee25167bf96cec926efe82ed2653d1449ab7b110624b02294b"
+    },
+    {
+      "id": 77,
+      "fileName": "smb-7888b9do.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Wisdomeyes/smb-7888b9do.7z",
+      "sha256": "9bcf6d296144bef8544c504c4ce7480291c3b99e6d189097373a1df5ddeab66a"
+    },
+    {
+      "id": 78,
+      "fileName": "smb-k51j6zkj.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/Wisdomeyes/smb-k51j6zkj.7z",
+      "sha256": "be599b94e32508b3311b5b39f482984bc198c904fa79193184a33d973ef7d15d"
+    },
+    {
+      "id": 79,
+      "fileName": "trickbot.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/trickbot/trickbot.zip",
+      "sha256": "e1382889e918bd1f2f87f5c13a1a2ebe5fa1a0cc89740c80683fefec81ff7097"
+    },
+    {
+      "id": 80,
+      "fileName": "1e0b984832b2282e86d923947c0a9244.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/1e0b984832b2282e86d923947c0a9244.7z",
+      "sha256": "03affd363484292a255883b16f267aa8f734f644cd81ba4aa85c4a89d2788a86"
+    },
+    {
+      "id": 81,
+      "fileName": "414af3620d0843f07318a2a33f65667d.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/414af3620d0843f07318a2a33f65667d.7z",
+      "sha256": "fddd06852b554f2858341788d71d181fd28acd4339ea52bed553ea9dac4e4cc1"
+    },
+    {
+      "id": 82,
+      "fileName": "46c7424076e7421298191c1e439c7ed8.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/46c7424076e7421298191c1e439c7ed8.7z",
+      "sha256": "fbd46c0ba42cc0bb4ee6e5f359c0f5c2c4499e09fbb7855904c9fdbecc64e738"
+    },
+    {
+      "id": 83,
+      "fileName": "7f4fb8ae70a49ddeed8d345f7450ae63.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/7f4fb8ae70a49ddeed8d345f7450ae63.7z",
+      "sha256": "952e9c938641992abce8fc6f81d339ee1d638ff9a674d0accece67b7f79681b7"
+    },
+    {
+      "id": 84,
+      "fileName": "ae03b4ac7105106a369d07df9becb0e5.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/ae03b4ac7105106a369d07df9becb0e5.7z",
+      "sha256": "9eafbc6e3e0a75dea20c8e753ffdcfdb76a22d3df1c7be9e023731408fcbdf6f"
+    },
+    {
+      "id": 85,
+      "fileName": "c65dc9d1c7a06f8a5afc45aa2e3b4eb5.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/c65dc9d1c7a06f8a5afc45aa2e3b4eb5.7z",
+      "sha256": "3bab78581adb5357451c98afe29ad094c20bad33fc420998dabdce8c63184462"
+    },
+    {
+      "id": 86,
+      "fileName": "e7a092ca8350fe0e6bebb27267a824bc.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/e7a092ca8350fe0e6bebb27267a824bc.7z",
+      "sha256": "db9f2d41274acae02f802c8b94d72cacba736c1217a31ed8dee51e981cbb559f"
+    },
+    {
+      "id": 87,
+      "fileName": "fed2ea8543b72a736c3bd6ea0e396c7d.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/fed2ea8543b72a736c3bd6ea0e396c7d.7z",
+      "sha256": "a1c7a1e6426b042037cbb5ee656c89ffd13145c55a14ab680a3d854b7720f34b"
+    },
+    {
+      "id": 88,
+      "fileName": "smb-0dtc5kep.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-0dtc5kep.7z",
+      "sha256": "e2f5718a3f0ac77db6414975d5d88b6916fd716768e2c6a5c85cc97a0c0ba8b8"
+    },
+    {
+      "id": 89,
+      "fileName": "smb-0py2u7vw.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-0py2u7vw.zip",
+      "sha256": "bab9ec04a44493526f8af17670febd32606338e6850e89cca28a8154ba5360d7"
+    },
+    {
+      "id": 90,
+      "fileName": "smb-0vn57iyp.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-0vn57iyp.7z",
+      "sha256": "a30504afbc58a8458749480db69a0f87fee6b60ed2a30711dc47a7794ff4178c"
+    },
+    {
+      "id": 91,
+      "fileName": "smb-2ywt7r9f.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-2ywt7r9f.7z",
+      "sha256": "df646e54a6d1814ab5952c3401045505fc7a339e69ad6d5397640b41f9bae092"
+    },
+    {
+      "id": 92,
+      "fileName": "smb-5rt1elnb.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-5rt1elnb.zip",
+      "sha256": "bf9718242a445bfe5b2ae0f47c6555040427964d027c5e32a260e57c73e5e354"
+    },
+    {
+      "id": 93,
+      "fileName": "smb-8ecsvmjv.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-8ecsvmjv.7z",
+      "sha256": "a594977c8339ed1344509586f507c4f667a6f69e6cf96872fe64977d44c7aae8"
+    },
+    {
+      "id": 94,
+      "fileName": "smb-_amx9zoe.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-_amx9zoe.zip",
+      "sha256": "0f4bfd5c95526baf7552f40ad3d2766c24a1c2f84640ecb0540e59c3c21c3ee9"
+    },
+    {
+      "id": 95,
+      "fileName": "smb-_arw2uf0.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-_arw2uf0.7z",
+      "sha256": "42cd7eb2b3ba51acf220c3cd446ff32538d9939b55c9ed2c3ec966e6627e17df"
+    },
+    {
+      "id": 96,
+      "fileName": "smb-ab90761a.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-ab90761a.7z",
+      "sha256": "c413e0d170d33d7071886eaeb878b76c5563aa0ed52a0fdf6515abcd3938c483"
+    },
+    {
+      "id": 97,
+      "fileName": "smb-bcm9iigd.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-bcm9iigd.7z",
+      "sha256": "45fa3434ceba2b0fe73a97574a11e9cd8e6b03ee300af521f8bb396b3c82c8e3"
+    },
+    {
+      "id": 98,
+      "fileName": "smb-csjqyro3.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-csjqyro3.7z",
+      "sha256": "e8cf634dda787242c72e975478c36ae7bc940fc4d436ff0dc22b34cb2059e273"
+    },
+    {
+      "id": 99,
+      "fileName": "smb-gse1z2_a.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-gse1z2_a.7z",
+      "sha256": "696d08c5e3ad00a112faaf3e599bf0c4b45ca88c41ebb865d535aeac26386b8b"
+    },
+    {
+      "id": 100,
+      "fileName": "smb-i606fuxv.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-i606fuxv.7z",
+      "sha256": "96489331a7739c08e876ee34b05c3b46915b6c0d6ad6c24306c47eb52d56a325"
+    },
+    {
+      "id": 101,
+      "fileName": "smb-k7jfnwun.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-k7jfnwun.zip",
+      "sha256": "b277109cb807c938ca52132182960cda23d2aec775f938105b4c156a109693e5"
+    },
+    {
+      "id": 102,
+      "fileName": "smb-nt7kaalt.zip",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-nt7kaalt.zip",
+      "sha256": "0243817f33ef841cdd0145661c17b2285087efcd4ff2863324751a4320f9c170"
+    },
+    {
+      "id": 103,
+      "fileName": "smb-rjkugea7.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-rjkugea7.7z",
+      "sha256": "6c0cdc4b69f557da15c5eedb95ee70c16f49f1cb8ac46152f77d994d0467e3d1"
+    },
+    {
+      "id": 104,
+      "fileName": "smb-t6hcv780.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-t6hcv780.7z",
+      "sha256": "417304f3ee0600b9197c868a9892718bd07dfe8556413681ac6264fe2a251f99"
+    },
+    {
+      "id": 105,
+      "fileName": "smb-ymicgjlh.7z",
+      "path": "https://raw.githubusercontent.com/fabrimagic72/malware-samples/master/unknown/smb-ymicgjlh.7z",
+      "sha256": "ba7a9ab338cdadafa17f74c1455e2deafaac38fc5d22c6d5ca7082e40dd759b4"
+    }
+  ]
+}
