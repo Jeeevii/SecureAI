@@ -62,20 +62,24 @@ const securityIssues = [
   ]
   packages: {
     node: {
-      [
-        name: String
-        severity: String
-        isDirect: Bool,
-        range: String,
-        fixAvailable: Bool
-      ]
+      filepath: {
+        [
+          name: String
+          severity: String
+          isDirect: Bool,
+          range: String,
+          fixAvailable: Bool
+        ]
+      }
     }
     python: {
-        [
-          package_name: String,
-          analyzed_version: String,
-          vulnerabilities_found: Int
-        ],
+      filepath: {
+          [
+            package_name: String,
+            analyzed_version: String,
+            vulnerabilities_found: Int
+          ],
+      }
     }
   }
 }
