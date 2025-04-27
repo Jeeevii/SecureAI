@@ -1,8 +1,7 @@
-# --- Upgraded find_vulnerabilities.py (final version) ---
-
 import os
 import json
 import asyncio
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 import google.generativeai as genai
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -20,7 +19,7 @@ genai.configure(api_key=api_key)
 CHUNK_SIZE = 8000
 CHUNK_OVERLAP = 500
 CONTEXT_TAIL_LINES = 15
-CONCURRENCY_LIMIT = 5
+CONCURRENCY_LIMIT = 3
 
 # --- Text Splitter Setup ---
 splitter = RecursiveCharacterTextSplitter(
@@ -31,7 +30,7 @@ splitter = RecursiveCharacterTextSplitter(
 # --- Retry Decorator ---
 @retry(wait=wait_random_exponential(min=1, max=5), stop=stop_after_attempt(5))
 async def safe_api_call(messages):
-    model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+    model = genai.GenerativeModel(model_name="gemini-2.0-flash")
     response = await model.generate_content_async(messages)
     return response.text
 
@@ -82,7 +81,8 @@ async def analyze_file(file_info):
             If a vulnerability spans multiple chunks, note it and analyze the surrounding context carefully.
 
             Return ONLY a JSON array where each object includes:
-            - "filename" (the current {file_path})
+            - "id" (unique integer ID starting from 1)
+            - "fileName" (the filename)
             - "lineNumber" (first line of issue if known, else null)
             - "issueType" (short label)
             - "severity" (Low, Medium, High, Critical)
@@ -103,11 +103,17 @@ async def analyze_file(file_info):
             parsed = json.loads(response_content[json_start:json_end])
 
             for vuln in parsed:
-                vuln.update({
+                clean_vuln = {
+                    "id": None,  # To be assigned later
                     "fileName": file_path,
-                    "lineNumber": (vuln.get("lineNumber") or chunk_start_line),
-                })
-                vulnerabilities.append(vuln)
+                    "lineNumber": vuln.get("lineNumber") if isinstance(vuln.get("lineNumber"), int) else None,
+                    "issueType": vuln.get("issueType") or "Unknown Issue",
+                    "severity": vuln.get("severity") or "Medium",
+                    "description": vuln.get("description") or "No description provided.",
+                    "codeSnippet": vuln.get("codeSnippet") or "No snippet provided.",
+                    "suggestedFix": vuln.get("suggestedFix") or "No fix suggested."
+                }
+                vulnerabilities.append(clean_vuln)
 
         except Exception as e:
             print(f"Error analyzing {file_path} chunk {idx + 1}: {e}")
@@ -139,13 +145,19 @@ async def find_vulnerabilities(input_file, output_file=None):
     for idx, vuln in enumerate(all_vulnerabilities, 1):
         vuln["id"] = idx
 
+    output_data = {
+        "repositoryName": os.getenv("REPOSITORY_NAME", "UnknownRepo"),
+        "scanDate": datetime.now(timezone.utc).isoformat() + "Z",
+        "issues": all_vulnerabilities
+    }
+
     if output_file:
         with open(output_file, 'w') as f:
-            json.dump(all_vulnerabilities, f, indent=2)
+            json.dump(output_data, f, indent=2)
     else:
-        print(json.dumps(all_vulnerabilities, indent=2))
+        print(json.dumps(output_data, indent=2))
 
-    return all_vulnerabilities
+    return output_data
 
 # --- CLI Entry Point ---
 def main():

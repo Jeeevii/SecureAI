@@ -1,57 +1,56 @@
-[
-  {
-    "filename": "index.html",
-    "lineNumber": 1,
-    "issueType": "Information Leakage",
-    "severity": "Critical",
-    "description": "The webpage collects extensive user information without explicit consent, including but not limited to geolocation, IP address, browser details, operating system, device type, clipboard contents, and user interactions (mouse clicks, text selection, keyboard input, scroll position, etc.). This constitutes a significant privacy violation and could be used for malicious purposes such as identity theft, tracking, and targeted advertising without user awareness or control.",
-    "codeSnippet": "<div class=\"card\" id=\"geolocation\">                     <h3>Approximate Location</h3>                     <div class=\"data\">Loading...</div>                 </div>",
-    "suggestedFix": "Remove all sections collecting sensitive user data.  Implement a robust consent mechanism before collecting any user information. Minimize data collection to only what is absolutely necessary for core functionality. Consider using privacy-preserving techniques such as differential privacy or federated learning if data collection is unavoidable.",
-    "fileName": "index.html",
-    "id": 1
-  },
-  {
-    "filename": "index.js",
-    "lineNumber": 144,
-    "issueType": "Information Leakage",
-    "severity": "High",
-    "description": "The code fetches and displays sensitive user information from `https://ipapi.co/json/`. This includes the user's IP address, geolocation (city, region, country), postal code, latitude, longitude, ISP, and organization.  This is a significant privacy violation and should not be done without explicit and informed user consent.",
-    "codeSnippet": "fetch('https://ipapi.co/json/')\n            .then(response => response.json())\n            .then(data => {\n                updateElement('ip', data.ip);\n                // ... other sensitive data\n            });",
-    "suggestedFix": "Remove the fetch call entirely. If location data is needed for legitimate purposes (e.g., for a feature that requires regionalization), use a more privacy-respecting method such as asking the user for their location with appropriate consent mechanisms. Avoid using external APIs that expose sensitive data without proper user consent and privacy safeguards.",
-    "fileName": "index.js",
-    "id": 2
-  },
-  {
-    "filename": "index.js",
-    "lineNumber": 227,
-    "issueType": "Information Leakage",
-    "severity": "High",
-    "description": "The script fetches and displays sensitive user information from `https://ipapi.co/json/`, including IP address, geolocation, ISP, and organization. This exposes user privacy and could be used for tracking or malicious purposes.  The response is not validated before use, increasing the risk of unexpected data.",
-    "codeSnippet": "fetch('https://ipapi.co/json/')\n            .then(response => response.json())\n            .then(data => {\n                updateElement('ip', data.ip);\n                // ... other data updates\n            })",
-    "suggestedFix": "Remove the fetch request entirely if this information is not crucial for the application's core functionality. If absolutely necessary, consider using a more privacy-respecting IP geolocation API that doesn't reveal potentially sensitive details, and implement robust input validation to handle unexpected or malicious responses.",
-    "fileName": "index.js",
-    "id": 3
-  },
-  {
-    "filename": "index.js",
-    "lineNumber": 291,
-    "issueType": "Cross-Site Scripting (XSS)",
-    "severity": "High",
-    "description": "The script directly inserts user-provided data (`text`) from the clipboard into the DOM without proper sanitization.  If a malicious user pastes specially crafted HTML or JavaScript code, it could be executed in the browser, leading to a cross-site scripting vulnerability.",
-    "codeSnippet": "const displayText = text.substring(0, 50) + (text.length > 50 ? '...' : '');\n         updateElement('clipboard', `Pasted: \"${displayText}\"`);",
-    "suggestedFix": "Sanitize the `displayText` variable before inserting it into the DOM.  Use a robust library like DOMPurify to escape HTML entities and prevent the execution of malicious JavaScript.",
-    "fileName": "index.js",
-    "id": 4
-  },
-  {
-    "filename": "index.js",
-    "lineNumber": 102,
-    "issueType": "Cross-Site Scripting (XSS)",
-    "severity": "Medium",
-    "description": "The `addLogEntry` function appends user-supplied content to the logs without sanitization.  While the primary display uses a simple HTML structure, an attacker might be able to inject malicious content into the log data, which could lead to stored XSS if this data is ever displayed in a context allowing HTML execution.",
-    "codeSnippet": "function addLogEntry(logType, content) {\n         if (logs[logType]) {\n             const timestamp = getTimestamp();\n             logs[logType].push({ timestamp, content });\n             updateLogDisplay(logType);\n         }\n     }",
-    "suggestedFix": "Sanitize the `content` parameter before adding it to the logs.  Escape any HTML special characters to prevent XSS. Consider whether logging this level of detail is truly necessary.",
-    "fileName": "index.js",
-    "id": 5
-  }
-]
+{
+  "repositoryName": "UnknownRepo",
+  "scanDate": "2025-04-27T02:44:59.998475+00:00Z",
+  "issues": [
+    {
+      "id": 1,
+      "fileName": "index.html",
+      "lineNumber": null,
+      "issueType": "Information Leakage",
+      "severity": "Medium",
+      "description": "The webpage logs a wide variety of user data, including mouse activity, keyboard input, scroll position, clipboard content, network information (IP address, location), and browser details.  While the footer claims the data isn't saved, the extent of data collection is concerning.  If the JavaScript (index.js) transmits any of this data to a remote server, it constitutes a significant privacy risk. The \"View All Logs\" button further suggests detailed logging functionality.",
+      "codeSnippet": "<p>Everything your browser reveals without permissions</p>\n     </header>\n\n     <main>\n         <section id=\"user-actions\">",
+      "suggestedFix": "Thoroughly review the JavaScript code (index.js) to ensure no collected data is transmitted to a remote server.  If data is transmitted, obtain explicit user consent and provide a clear privacy policy.  Consider reducing the scope of data collection to minimize privacy risks."
+    },
+    {
+      "id": 2,
+      "fileName": "index.js",
+      "lineNumber": 44,
+      "issueType": "XSS",
+      "severity": "Medium",
+      "description": "The code constructs HTML by concatenating strings that include user input (`log.content`) without proper sanitization or encoding. Specifically, the `addLogEntry` function captures text input, text selection, mouse clicks, and window focus events, then logs these events to the UI via `updateLogDisplay`. The `log.content` variable is directly embedded into the HTML string within the `log-content` span. This could allow an attacker to inject malicious HTML or JavaScript code by crafting specific input or interactions that end up in the logs. For example, if a user selects or pastes a string containing `<img src=x onerror=alert(1)>`, this payload will be executed when the log entry is rendered in the browser.",
+      "codeSnippet": "html += `<div class=\"log-entry\">\n                 <span class=\"log-timestamp\">[${log.timestamp}]</span>\n                 <span class=\"log-content\">${log.content}</span>\n             </div>`;",
+      "suggestedFix": "Encode the `log.content` variable before embedding it into the HTML. Use a proper HTML encoding function (e.g., escapeHtml from a library like lodash or a custom function) to convert characters like `<`, `>`, `&`, and `\"` into their corresponding HTML entities."
+    },
+    {
+      "id": 3,
+      "fileName": "index.js",
+      "lineNumber": 161,
+      "issueType": "Information Disclosure",
+      "severity": "Low",
+      "description": "The code retrieves the user's IP address and location information (city, region, country, coordinates, zip code, ISP, organization) using the `ipapi.co` API. While this information might be useful for some legitimate purposes, it can also be considered sensitive data. Displaying this information directly in the UI (via `updateElement` calls) could be a privacy concern for some users, especially if it's not clear to them that this data is being collected and displayed.",
+      "codeSnippet": "fetch('https://ipapi.co/json/')\n             .then(response => response.json())\n             .then(data => {\n                 //console.log('IP/location data:', data);\n                 updateElement('ip', data.ip);\n                                  updateElement('geolocation', `${data.city}, ${data.region}, ${data.country_name}`);\n                 updateElement('zip-code', data.postal || 'Not available');\n                 updateElement('location-coordinates', `Latitude: ${data.latitude}\\nLongitude: ${data.longitude}`);\n                 updateElement('isp', data.asn || 'Not available');\n                 updateElement('organization', data.org || 'Not available');",
+      "suggestedFix": "Consider informing users about the IP address and location data collection and usage through a privacy notice or consent prompt. Alternatively, avoid displaying this data in the UI by default, or only display aggregated or anonymized data."
+    },
+    {
+      "id": 4,
+      "fileName": "index.js",
+      "lineNumber": 64,
+      "issueType": "XSS",
+      "severity": "Medium",
+      "description": "The code uses `innerHTML` to inject log entries into the DOM. The `log.content` is not sanitized, which could lead to XSS vulnerabilities if the logged content contains malicious HTML/JavaScript. The text selected by the user, which is used as log content, can contain arbitrary characters and code. This could lead to an attacker injecting malicious code that will be executed when the logs are displayed.  The same occurs for mouse clicks, key presses, and clipboard pastes.",
+      "codeSnippet": "html += `<div class=\"log-entry\">\n                 <span class=\"log-timestamp\">[${log.timestamp}]</span>\n                 <span class=\"log-content\">${log.content}</span>\n             </div>`;\n\nlogContainer.innerHTML = html;",
+      "suggestedFix": "Use `textContent` or `innerText` instead of `innerHTML` to prevent the execution of any HTML code in the log content. Alternatively, sanitize the `log.content` using a library like DOMPurify before inserting it into the DOM."
+    },
+    {
+      "id": 5,
+      "fileName": "index.js",
+      "lineNumber": 152,
+      "issueType": "Information Disclosure",
+      "severity": "Medium",
+      "description": "The code fetches IP/location data from `https://ipapi.co/json/` and displays it. This exposes the user's IP address, location (city, region, country), zip code, coordinates, ISP, and organization to the client-side script. Depending on the application's privacy policy and intended use of this data, this may be undesirable and constitute an information disclosure vulnerability.  This information is sent directly to the client and is therefore accessible.",
+      "codeSnippet": "fetch('https://ipapi.co/json/')\n            .then(response => response.json())\n            .then(data => {\n                //console.log('IP/location data:', data);\n                updateElement('ip', data.ip);\n\n                updateElement('geolocation', `${data.city}, ${data.region}, ${data.country_name}`);\n                updateElement('zip-code', data.postal || 'Not available');\n                updateElement('location-coordinates', `Latitude: ${data.latitude}\\nLongitude: ${data.longitude}`);\n                updateElement('isp', data.asn || 'Not available');\n                updateElement('organization', data.org || 'Not available');",
+      "suggestedFix": "Re-evaluate the necessity of collecting and displaying this sensitive user data. If it is required, ensure proper consent is obtained, and consider processing this data server-side instead of exposing it directly to the client."
+    }
+  ]
+}
