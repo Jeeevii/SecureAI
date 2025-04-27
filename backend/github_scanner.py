@@ -5,89 +5,101 @@ import json
 import os
 from urllib.parse import urlparse
 
-session = requests.Session()
+class RepoFileFetcher:
+    DEFAULT_EXTENSIONS = {'.py', '.html', '.cpp', '.c', '.hpp', '.h', '.tsx', '.ts', '.js', '.jsx', 'Docker', '.yaml'}
+    DEFAULT_IGNORE_DIRS = {'node_modules', '.git', '.md', '.pdf', '.css'}
 
-ALLOWED_EXTENSIONS = {'.py', '.html', '.cpp', '.c', '.hpp', '.h', '.tsx', '.ts', '.js', '.jsx'}
-IGNORE_DIRS = {'node_modules', '.git'}
+    def __init__(self, repo_url, output='repo_files.json', allowed_extensions=None, ignore_dirs=None):
+        self.owner, self.repo = self._parse_github_url(repo_url)
+        self.output = output
+        self.allowed_extensions = allowed_extensions or self.DEFAULT_EXTENSIONS
+        self.ignore_dirs = ignore_dirs or self.DEFAULT_IGNORE_DIRS
+        self.session = requests.Session()
+        self.branch = self._get_default_branch()
 
-def parse_github_url(url):
-    parsed = urlparse(url)
-    parts = parsed.path.strip('/').split('/')
-    if len(parts) < 2:
-        raise ValueError(f"Invalid GitHub URL: {url}")
-    owner, repo = parts[0], parts[1].removesuffix('.git')
-    return owner, repo
+    @staticmethod
+    def _parse_github_url(url):
+        parsed = urlparse(url)
+        parts = parsed.path.strip('/').split('/')
+        if len(parts) < 2:
+            raise ValueError(f"Invalid GitHub URL: {url}")
+        owner, repo = parts[0], parts[1].removesuffix('.git')
+        return owner, repo
 
-def get_default_branch(owner, repo):
-    api = f"https://api.github.com/repos/{owner}/{repo}"
-    r = session.get(api)
-    r.raise_for_status()
-    return r.json().get('default_branch')
+    def _get_default_branch(self):
+        api = f"https://api.github.com/repos/{self.owner}/{self.repo}"
+        r = self.session.get(api)
+        r.raise_for_status()
+        return r.json().get('default_branch')
 
-def get_all_files(owner, repo, branch):
-    api = f"https://api.github.com/repos/{owner}/{repo}/git/trees/{branch}?recursive=1"
-    r = session.get(api)
-    r.raise_for_status()
-    tree = r.json().get('tree', [])
-    return [item for item in tree if item.get('type') == 'blob']
+    def _get_all_files(self):
+        api = f"https://api.github.com/repos/{self.owner}/{self.repo}/git/trees/{self.branch}?recursive=1"
+        r = self.session.get(api)
+        r.raise_for_status()
+        tree = r.json().get('tree', [])
+        return [item for item in tree if item.get('type') == 'blob']
 
-def is_allowed(path):
-    for part in path.split('/'):
-        if part in IGNORE_DIRS:
+    def _is_allowed(self, path):
+        # Skip ignored directories and filter by extension
+        if any(part in self.ignore_dirs for part in path.split('/')):
             return False
-    ext = os.path.splitext(path)[1].lower()
-    return ext in ALLOWED_EXTENSIONS
+        _, ext = os.path.splitext(path)
+        return ext.lower() in self.allowed_extensions
 
-def get_raw_content(owner, repo, branch, path):
-    raw_url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{path}"
-    r = session.get(raw_url)
-    r.raise_for_status()
-    return r.text
+    def _get_raw_content(self, path):
+        raw_url = f"https://raw.githubusercontent.com/{self.owner}/{self.repo}/{self.branch}/{path}"
+        r = self.session.get(raw_url)
+        r.raise_for_status()
+        return r.text
 
-def sanitize_content(text):
-    return text.replace('\r\n', '').replace('\n', '').replace('\r', '')
+    @staticmethod
+    def _sanitize_content(text):
+        return text.replace('\r\n', ' ').replace('\n', ' ').replace('\r', ' ')
+
+    def fetch(self):
+        files = self._get_all_files()
+        data = []
+        idx = 1
+        for item in files:
+            path = item.get('path')
+            print("Getting: ", path)
+            if not self._is_allowed(path):
+                continue
+            try:
+                raw = self._get_raw_content(path)
+                content = self._sanitize_content(raw)
+            except requests.HTTPError:
+                content = ''
+            data.append({'id': idx, 'path': path, 'contents': content})
+            idx += 1
+        return data
+
+    def write_json(self, data):
+        raw_json = json.dumps(data, ensure_ascii=False, indent=2)
+        # raw_json = raw_json.replace('\\"', '"')
+        with open(self.output, 'w', encoding='utf-8') as f:
+            f.write(raw_json)
+
+    def run(self):
+        data = self.fetch()
+        self.write_json(data)
+        print(f"Wrote {len(data)} entries to {self.output}")
+
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Fetch only allowed file types from a GitHub repo and write sanitized contents to JSON."
+        description="Fetch allowed files from a GitHub repo and write sanitized contents to JSON."
     )
     parser.add_argument('repo_url', help="e.g. https://github.com/owner/repo")
     parser.add_argument('-o', '--output', default='repo_files.json',
-                        help="Output JSON file path (default: repo_files.json)")
+                        help="Output JSON file (default: repo_files.json)")
     args = parser.parse_args()
     try:
-        owner, repo = parse_github_url(args.repo_url)
-    except ValueError as e:
+        fetcher = RepoFileFetcher(args.repo_url, output=args.output)
+        fetcher.run()
+    except Exception as e:
         sys.exit(e)
 
-    branch = get_default_branch(owner, repo)
-    all_files = get_all_files(owner, repo, branch)
-    data = []
-    idx = 1
-    for item in all_files:
-        path = item.get('path')
-        print("Doing: ", path)
-        if not is_allowed(path):
-            continue
-        try:
-            raw = get_raw_content(owner, repo, branch, path)
-            content = sanitize_content(raw)
-        except requests.HTTPError:
-            content = ''
-        data.append({'id': idx, 'path': path, 'contents': content})
-        idx += 1
-
-    output_path = args.output
-    dirpath = os.path.dirname(output_path)
-    if dirpath and not os.path.exists(dirpath):
-        os.makedirs(dirpath, exist_ok=True)
-
-    try:
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-        print(f"Wrote {len(data)} allowed file entries to {output_path}")
-    except IOError as e:
-        sys.exit(f"Error writing JSON file: {e}")
 
 if __name__ == '__main__':
     main()
