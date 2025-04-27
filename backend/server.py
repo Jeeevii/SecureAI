@@ -6,8 +6,8 @@ import json
 import os
 from pydantic import BaseModel
 from github_scanner import RepoFileFetcher
-from find_vulnerabilities import find_vulnerabilities
-
+from backend.vulnerability_detector import find_vulnerabilities
+from check_packages import check_packages
 class RepositoryRequest(BaseModel):
     url: str
 
@@ -22,9 +22,8 @@ app.add_middleware(
 )
 
 @app.post("/vulnerabilities")
-async def get_vulnerabilities(repo: RepositoryRequest = Body(...)):
+async def scan_repo(repo: RepositoryRequest = Body(...)):
     try:
-        # Create output directory if it doesn't exist
         os.makedirs("json_output", exist_ok=True)
         
         temp_files_json = "json_output/repo_files.json"
@@ -40,8 +39,10 @@ async def get_vulnerabilities(repo: RepositoryRequest = Body(...)):
         with open(vulnerabilities_path, 'r') as file:
             vulnerabilities = json.load(file)
             
-        vulnerabilities["repositoryUrl"] = repo.url
-        vulnerabilities["scanDate"] = os.path.getmtime(vulnerabilities_path)
+        # vulnerabilities["repositoryUrl"] = repo.url
+        # vulnerabilities["scanDate"] = os.path.getmtime(vulnerabilities_path)
+        vulnerabilities["packagesVulnerabilities"] = check_packages()
+    
         return JSONResponse(content=vulnerabilities)
     
     except Exception as e:

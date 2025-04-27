@@ -12,22 +12,23 @@ NORMAL_EXTENSIONS = {
     '.py', '.js', '.cpp', '.c', '.java', '.html', '.ts',
     '.tsx', '.jsx', '.go', '.sh', '.rb', '.php', '.sql', '.xml', '.json', '.yml', '.yaml'
 }
-BINARY_EXTENSIONS = {'.exe', '.dll', '.sys', '.bin', '.dat', '.msi', '.apk', '.so', '.dmg','.7z', '.bz2', '.cab', '.class', '.deb', '.iso', '.jar', '.lib', '.o', '.obj', '.pdb', '.pyc', '.rpm', '.tar.gz', '.tgz', '.zip'}
+BINARY_EXTENSIONS = {'.exe', '.dll', '.sys', '.bin', '.dat', '.msi', '.apk', '.so', '.dmg'}
 
-IGNORE_DIRS = {'node_modules', '.git', '.github', '__pycache__', '.json', '.pdf', '.zip', '.tar', '.gz', '.rar'}
+IGNORE_DIRS = {'node_modules', '.git', '.github', '__pycache__', '.json', '.pdf', '.zip', '.tar', '.gz', '.rar', '.7z'}
 
-OUTPUT_NORMAL = 'repo_files.json'
-OUTPUT_BINARIES = 'repo_binaries.json'
+OUTPUT_FILE = 'repo_files.json'
+# OUTPUT_BINARIES = 'repo_binaries.json'
 OUTPUT_FOLDER = 'json_output'
 
 # ===== Utility =====
 def sha256_file(url, hash_algorithm="sha256"):
     try:
+        # Request the file content from the raw GitHub URL
         with requests.get(url, stream=True) as response:
-            response.raise_for_status()  # Raise an exception for bad status codes
+            response.raise_for_status()  # Raise exception for bad responses
 
             hasher = hashlib.new(hash_algorithm)
-            for chunk in response.iter_content(chunk_size=8192): # Process in chunks
+            for chunk in response.iter_content(chunk_size=8192):  # Process file in chunks
                 if chunk:
                     hasher.update(chunk)
             return hasher.hexdigest()
@@ -35,7 +36,7 @@ def sha256_file(url, hash_algorithm="sha256"):
     except requests.exceptions.RequestException as e:
         print(f"Error: {e}")
         return None
-
+        
 # ===== Main Class =====
 class GitHubScanner:
     def __init__(self, repo_url):
@@ -50,7 +51,7 @@ class GitHubScanner:
         os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
         # Ensure the normal and binary files exist
-        for filename in [OUTPUT_NORMAL, OUTPUT_BINARIES]:
+        for filename in [OUTPUT_FILE]:
             full_path = os.path.join(OUTPUT_FOLDER, filename)
             if not os.path.exists(full_path):
                 # If the file doesn't exist, create it with an empty JSON object
@@ -82,7 +83,12 @@ class GitHubScanner:
     def _is_normal_file(self, path):
         _, ext = os.path.splitext(path)
         return ext.lower() in NORMAL_EXTENSIONS
-
+    
+    def _is_executable_file(self, path):
+        """Check if the file is an executable based on its extension."""
+        _, ext = os.path.splitext(path)
+        return ext.lower() in BINARY_EXTENSIONS
+    
     def _is_binary_file(self, path):
         _, ext = os.path.splitext(path)
         if ext.lower() in BINARY_EXTENSIONS:
@@ -120,7 +126,7 @@ class GitHubScanner:
                 idx += 1
 
         return normal_files, files, normal_paths
-
+    
     def fetch_binaries(self, all_files, normal_paths):
         binaries_data = []
         idx = 1
@@ -130,25 +136,27 @@ class GitHubScanner:
                 continue
             path = item['path']
 
+            # Skip files already processed as normal or ignored
             if path in normal_paths or self._is_ignored(path):
                 continue
 
-            if self._is_binary_file(path):
+            if self._is_binary_file(path):  # Only process binary files
                 print(f"[⚡] Found binary file: {path}")
                 raw_url = f"https://raw.githubusercontent.com/{self.owner}/{self.repo}/{self.branch}/{path}"
-                # Get the SHA256 hash of the file path (or use the raw URL for hashing)
-                file_hash = sha256_file(raw_url)
-                
-                # Flag files with no extension as suspicious
-                binaries_data.append({
-                    "id": idx,
-                    "fileName": os.path.basename(path),
-                    "path": raw_url,
-                    "sha256": file_hash,
-                })
-                idx += 1
+
+                # If the file is executable, we process it for hashing
+                if self._is_executable_file(path):  # Only hash executable files
+                    file_hash = sha256_file(raw_url)  # Fallback to hash the whole file directly
+                    binaries_data.append({
+                        "id": idx,
+                        "fileName": os.path.basename(path),
+                        "path": raw_url,
+                        "sha256": file_hash,
+                    })
+                    idx += 1
 
         return binaries_data
+
 
     def _fetch_raw_content(self, path):
         raw_url = f"https://raw.githubusercontent.com/{self.owner}/{self.repo}/{self.branch}/{path}"
@@ -156,11 +164,8 @@ class GitHubScanner:
         r.raise_for_status()
         return r.text
 
-    def save_json(self, filename, key, items):
-        """Save items to a JSON file, ensuring the file and folder exist."""
-        if not items:
-            return
-
+    def save_json(self, filename, normal_files, binaries):
+        """Save both normal files and binary files to a single JSON file."""
         # Ensure the necessary files and folder exist
         self.create_files()
 
@@ -168,7 +173,8 @@ class GitHubScanner:
         data = {
             "repositoryName": self.repo_name,
             "scanDate": datetime.now().isoformat() + "Z",
-            key: items
+            "files": normal_files,
+            "binaries": binaries
         }
 
         # Write the data to the file
@@ -176,16 +182,18 @@ class GitHubScanner:
         with open(full_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2)
 
-        print(f"[✅] Wrote {len(items)} items to {filename}")
+        print(f"[✅] Wrote {len(normal_files) + len(binaries)} items to {filename}")
+
     def run(self):
         normal_files, all_files, normal_paths = self.fetch()
-        self.save_json(OUTPUT_NORMAL, 'files', normal_files)
-
         binaries = self.fetch_binaries(all_files, normal_paths)
+        
         if binaries:
-            self.save_json(OUTPUT_BINARIES, 'binaries', binaries)
+            print(f"[⚡] Found {len(binaries)} binary files.")
         else:
-            print("[*] No binaries found — skipping binaries.json ✌️")
+            print("[⚡] No binary files found.")
+        # Save both normal files and binaries into one file
+        self.save_json(OUTPUT_FILE, normal_files, binaries)
 
 # ===== Main Entrypoint =====
 def main():
