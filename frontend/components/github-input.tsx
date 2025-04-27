@@ -14,6 +14,13 @@ export function GithubInput() {
   const router = useRouter()
   const { toast } = useToast()
 
+  // Function to validate GitHub URL format
+  const isValidGithubUrl = (url: string): boolean => {
+    // Regular expression to match https://github.com/NAMEHERE/REPONAME format
+    const githubUrlRegex = /^https:\/\/github\.com\/[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/
+    return githubUrlRegex.test(url)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
@@ -23,6 +30,12 @@ export function GithubInput() {
       return
     }
 
+    // Validate GitHub URL format
+    if (!isValidGithubUrl(repositoryUrl)) {
+      setError("Invalid GitHub repository URL.")
+      return
+    }
+      
     try {
       setIsLoading(true)
       
