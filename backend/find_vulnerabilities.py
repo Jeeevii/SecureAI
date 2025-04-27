@@ -97,20 +97,29 @@ async def analyze_file(file_info):
             parsed = json.loads(response_content[json_start:json_end])
 
             for vuln in parsed:
+                snippet = vuln.get("codeSnippet")
+                line_number = None
+
+                if snippet and snippet != "No snippet provided.":
+                    line_number = find_snippet_line(contents, snippet)
+
                 clean_vuln = {
-                    "id": None,  # To be assigned later
+                    "id": None,  # Assigned later
                     "fileName": file_path,
-                    "lineNumber": vuln.get("lineNumber") if isinstance(vuln.get("lineNumber"), int) else None,
+                    "lineNumber": line_number,
                     "issueType": vuln.get("issueType") or "Unknown Issue",
                     "severity": vuln.get("severity") or "Medium",
                     "description": vuln.get("description") or "No description provided.",
-                    "codeSnippet": vuln.get("codeSnippet") or "No snippet provided.",
+                    "codeSnippet": snippet or "No snippet provided.",
                     "suggestedFix": vuln.get("suggestedFix") or "No fix suggested."
                 }
                 vulnerabilities.append(clean_vuln)
 
+
         except Exception as e:
-            print(f"Error analyzing {file_path} chunk {idx + 1}: {e}")
+            # print(f"Error analyzing {file_path} chunk {idx + 1}: {e}")
+            # print(f"Raw response was:\n{response_content}\n")
+            pass
 
         previous_tail = "\n".join(current_lines[-CONTEXT_TAIL_LINES:])
         line_cursor += len(current_lines) - CONTEXT_TAIL_LINES
@@ -162,6 +171,20 @@ async def find_vulnerabilities(input_file, output_file=None):
         print(json.dumps(result_data, indent=2))
 
     return all_vulnerabilities
+
+def find_snippet_line(contents, snippet):
+    """
+    Finds the starting line number of the snippet within contents.
+    Returns the line number (1-based) or None if not found.
+    """
+    content_lines = contents.splitlines()
+    snippet_lines = snippet.strip().splitlines()
+
+    for i in range(len(content_lines) - len(snippet_lines) + 1):
+        window = content_lines[i:i + len(snippet_lines)]
+        if all(snippet_lines[j].strip() in window[j] for j in range(len(snippet_lines))):
+            return i + 1
+    return None
 
 def main():
     input_file = "json_output/repo_files.json"
