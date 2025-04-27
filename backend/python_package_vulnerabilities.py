@@ -111,7 +111,6 @@ def scan_requirements_string(requirements_content: str) -> dict:
     try:
         parser = SafetyReportParser(raw)
     except TypeError:
-        # Create a temporary file for parsing if needed
         temp_path = os.path.join("json_output", "temp_safety.json")
         os.makedirs(os.path.dirname(temp_path), exist_ok=True)
         with open(temp_path, 'w', encoding='utf-8') as f:

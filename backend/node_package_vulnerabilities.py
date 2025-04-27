@@ -54,19 +54,15 @@ Convert it to this format:
 }
 """
 def find_vulnerabilities(package_lock_content: str, file_path="package-lock.json"):
-    # Step 1: Create a temporary folder
     with tempfile.TemporaryDirectory() as tmpdir:
-        # Write the package-lock.json
         lock_path = os.path.join(tmpdir, "package-lock.json")
         with open(lock_path, "w") as f:
             f.write(package_lock_content)
         
-        # Also create a dummy package.json (npm needs it)
         package_json_path = os.path.join(tmpdir, "package.json")
         with open(package_json_path, "w") as f:
             f.write('{"name": "temp", "version": "1.0.0"}')
         
-        # Step 2: Run npm audit --package-lock-only
         result = subprocess.run(
             ["npm", "audit", "--package-lock-only", "--json"],
             cwd=tmpdir,
@@ -74,12 +70,10 @@ def find_vulnerabilities(package_lock_content: str, file_path="package-lock.json
             text=True
         )
 
-        # Step 3: Parse vulnerabilities
         try:
             audit_data = json.loads(result.stdout)
             vulnerabilities = audit_data.get("vulnerabilities", {})
             
-            # Step 4: Convert to the required format 
             simplified_vulnerabilities = simplify_vulnerabilities(vulnerabilities)
             
             return simplified_vulnerabilities
@@ -99,9 +93,7 @@ def simplify_vulnerabilities(vulnerabilities_data):
     """
     simplified_array = []
     
-    # Process each package in the vulnerabilities data
     for package_name, package_info in vulnerabilities_data.items():
-        # Extract only the fields we need
         simplified_array.append({
             "name": package_info.get("name"),
             "severity": package_info.get("severity", "unknown"),

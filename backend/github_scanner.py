@@ -8,7 +8,6 @@ from urllib.parse import urlparse
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
-# ===== Constants =====
 NORMAL_EXTENSIONS = {
     '.py', '.pyx', '.pyd', '.pyi', '.pyc',
     '.rs', '.rlib',
@@ -28,7 +27,6 @@ NORMAL_EXTENSIONS = {
 BINARY_EXTENSIONS = {'.exe', '.dll', '.sys', '.bin', '.dat', '.msi', '.apk', '.so', '.dmg'}
 IGNORE_DIRS = {'node_modules', '.git', '.md', '.pdf', '.css', '.json', '.gitignore', '.gitattributes'}
 
-# ===== Utility =====
 def sha256_file(url, hash_algorithm="sha256"):
     try:
         with requests.get(url, stream=True) as response:
@@ -42,7 +40,6 @@ def sha256_file(url, hash_algorithm="sha256"):
         print(f"[x] Error hashing file: {e}")
         return None
 
-# ===== Main Class =====
 class RepoFileFetcher:
     def __init__(self, repo_url, output='repo_files.json'):
         self.owner, self.repo = self._parse_github_url(repo_url)
@@ -85,7 +82,7 @@ class RepoFileFetcher:
         if ext.lower() in BINARY_EXTENSIONS:
             return True
         if not ext:
-            return True  # Assume extensionless files could be binary too
+            return True  
         return False
 
     def _fetch_text_content(self, path):
@@ -182,7 +179,7 @@ class RepoFileFetcher:
         with open(self.output, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2)
 
-        print(f"[✅] Wrote {len(normal_files)} normal files and {len(binaries)} binaries to {self.output}")
+        print(f" Wrote {len(normal_files)} normal files and {len(binaries)} binaries to {self.output}")
 
     def run(self):
         normal_files, binaries = self.fetch()

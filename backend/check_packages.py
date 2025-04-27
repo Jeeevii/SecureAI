@@ -30,7 +30,6 @@ def check_packages():
         with open('json_output/repo_packages.json', 'r') as infile:
             repo_packages = json.load(infile)
             
-            # Process each file looking for package files
             for file_entry in repo_packages.get('files', []):
                 file_path = file_entry.get('path', '')
                 
@@ -55,7 +54,6 @@ def check_packages():
     except FileNotFoundError:
         print("Repository packages file not found. Please scan the repository first.")
     
-    # Write vulnerabilities to output file
     with open('json_output/package_vulnerabilities.json', 'w') as outfile:
         json.dump(vulnerabilities_found, outfile, indent=2)
     
