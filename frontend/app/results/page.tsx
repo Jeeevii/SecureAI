@@ -81,6 +81,10 @@ export default function ResultsPage() {
     document.body.removeChild(link);
   };
 
+  const downloadPDF = () => {
+    window.print();
+  }
+
   // Extract repository name from URL
   const getRepoName = (url: string) => {
     try {
@@ -118,9 +122,13 @@ export default function ResultsPage() {
             </p>
           </div>
           <div className="flex gap-3">
-            <Button className="bg-black hover:bg-gray-800 text-white" onClick={downloadRaw}>
+            <Button variant="outline" className="border-gray-300 text-gray-700 hover:text-black hover:bg-gray-50" onClick={downloadRaw}>
               <Download className="h-4 w-4 mr-2" />
-              Download Report
+              Download Report (Raw)
+            </Button>
+            <Button className="bg-black hover:bg-gray-800 text-white" onClick={downloadPDF}>
+              <Download className="h-4 w-4 mr-2" />
+              Download Report (PDF)
             </Button>
           </div>
         </div>
