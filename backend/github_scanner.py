@@ -6,14 +6,30 @@ import os
 from urllib.parse import urlparse
 
 class RepoFileFetcher:
-    DEFAULT_EXTENSIONS = {'.py', '.html', '.cpp', '.c', '.hpp', '.h', '.tsx', '.ts', '.js', '.jsx', 'Docker', '.yaml'}
+    DEFAULT_EXTENSIONS = {
+        '.py', '.pyx', '.pyd', '.pyi', '.pyc',
+        '.rs', '.rlib',
+        '.html', '.htm', '.css', '.scss', '.sass', '.less',
+        '.js', '.jsx', '.ts', '.tsx', '.vue', '.svelte',
+        '.cpp', '.c', '.cc', '.cxx', '.h', '.hpp', '.hxx',
+        '.java', '.kt', '.kts', '.groovy',
+        '.cs', '.vb', '.fs',
+        '.go',
+        '.rb', '.erb', '.rake',
+        '.php', '.phtml', '.php3', '.php4', '.php5',
+        '.swift', '.m', '.mm',
+        '.sh', '.bash', '.zsh', '.fish',
+        '.json', '.yaml', '.yml', '.toml', '.xml', '.ini', '.config',
+        'Dockerfile', '.dockerfile', '.dockerignore',
+        '.sql', '.graphql', '.proto', '.md',
+    }
     DEFAULT_IGNORE_DIRS = {'node_modules', '.git', '.md', '.pdf', '.css'}
 
-    def __init__(self, repo_url, output='repo_files.json', allowed_extensions=None, ignore_dirs=None):
+    def __init__(self, repo_url, output='repo_files.json'):
         self.owner, self.repo = self._parse_github_url(repo_url)
         self.output = output
-        self.allowed_extensions = allowed_extensions or self.DEFAULT_EXTENSIONS
-        self.ignore_dirs = ignore_dirs or self.DEFAULT_IGNORE_DIRS
+        self.allowed_extensions = self.DEFAULT_EXTENSIONS
+        self.ignore_dirs = self.DEFAULT_IGNORE_DIRS
         self.session = requests.Session()
         self.branch = self._get_default_branch()
 
@@ -62,12 +78,14 @@ class RepoFileFetcher:
         idx = 1
         for item in files:
             path = item.get('path')
-            print("Getting: ", path)
+            
             if not self._is_allowed(path):
+                print("Skipped: ", path)
                 continue
             try:
                 raw = self._get_raw_content(path)
                 content = self._sanitize_content(raw)
+                print("Getting: ", path)
             except requests.HTTPError:
                 content = ''
             data.append({'id': idx, 'path': path, 'contents': content})
