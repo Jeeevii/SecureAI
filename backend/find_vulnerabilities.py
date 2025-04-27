@@ -5,10 +5,7 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from tenacity import retry, wait_random_exponential, stop_after_attempt
-from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timezone
 
-# Load environment variables
 load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
@@ -16,21 +13,18 @@ if not api_key:
 
 genai.configure(api_key=api_key)
 
-# --- Constants ---  
-CHUNK_SIZE = 6000  # Reduced chunk size to 6k to prevent large chunks that could hit rate limits
+CHUNK_SIZE = 8000
 CHUNK_OVERLAP = 500
 CONTEXT_TAIL_LINES = 15
-BASE_CONCURRENCY_LIMIT = 5  # Dynamically adjust based on file size
-LARGE_FILE_SIZE_THRESHOLD = 5000  # Consider files larger than 5000 lines as large
+CONCURRENCY_LIMIT = 3
+LARGE_FILE_SIZE_THRESHOLD = 5000
 
-# --- Text Splitter Setup ---
 splitter = RecursiveCharacterTextSplitter(
     chunk_size=CHUNK_SIZE,
     chunk_overlap=CHUNK_OVERLAP,
 )
 
-# --- Retry Decorator ---  
-@retry(wait=wait_random_exponential(min=2, max=10), stop=stop_after_attempt(5))
+@retry(wait=wait_random_exponential(min=1, max=5), stop=stop_after_attempt(5))
 async def safe_api_call(messages):
     model = genai.GenerativeModel(model_name="gemini-2.0-flash")
     try:
@@ -40,12 +34,10 @@ async def safe_api_call(messages):
         print(f"Error: {e}")
         raise  # Re-raise to trigger retry logic
 
-# --- File splitting function ---
 def split_file_contents(contents):
     return splitter.split_text(contents)
 
-# --- Analyze single file ---
-async def analyze_file(file_info, concurrency_limit):
+async def analyze_file(file_info):
     file_path = file_info["path"]
     contents = file_info["contents"]
     
@@ -120,25 +112,25 @@ async def sem_task(semaphore, task_func, *args):
 
 # --- Main scanning function ---
 async def find_vulnerabilities(input_file, output_file=None):
+    if output_file:
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
+        
     with open(input_file, 'r') as f:
         file_data = json.load(f)
 
     all_vulnerabilities = []
-    semaphore = asyncio.Semaphore(BASE_CONCURRENCY_LIMIT)
+    semaphore = asyncio.Semaphore(CONCURRENCY_LIMIT)
 
     # Split files into large and small, prioritize large files for threads
     large_files = [file_info for file_info in file_data["files"] if len(file_info["contents"].splitlines()) > LARGE_FILE_SIZE_THRESHOLD]
     small_files = [file_info for file_info in file_data["files"] if len(file_info["contents"].splitlines()) <= LARGE_FILE_SIZE_THRESHOLD]
 
-    # Process large files with dedicated threads
-    with ThreadPoolExecutor(max_workers=BASE_CONCURRENCY_LIMIT) as executor:
-        futures = [executor.submit(analyze_file, file_info, BASE_CONCURRENCY_LIMIT) for file_info in large_files]
-        for future in futures:
-            result = await future
-            all_vulnerabilities.extend(result)
+    for file_info in large_files:
+        file_vulns = await analyze_file(file_info)
+        all_vulnerabilities.extend(file_vulns)
 
     # Process small files with semaphore-controlled concurrency
-    tasks = [sem_task(semaphore, analyze_file, file_info, BASE_CONCURRENCY_LIMIT) for file_info in small_files]
+    tasks = [sem_task(semaphore, analyze_file, file_info) for file_info in small_files]
     results = await asyncio.gather(*tasks)
 
     for file_vulns in results:
@@ -147,10 +139,7 @@ async def find_vulnerabilities(input_file, output_file=None):
     for idx, vuln in enumerate(all_vulnerabilities, 1):
         vuln["id"] = idx
 
-    # Wrap results in repository format
     result_data = {
-        "repositoryName": "TEMP",  
-        "scanDate": datetime.now(timezone.utc).isoformat() + "Z",
         "issues": all_vulnerabilities
     }
 
@@ -162,7 +151,6 @@ async def find_vulnerabilities(input_file, output_file=None):
 
     return all_vulnerabilities
 
-# --- CLI Entry Point ---
 def main():
     input_file = "json_output/repo_files.json"
     output_file = "json_output/vulnerabilities.json"
