@@ -1,6 +1,5 @@
 import json 
 from node_package_vulnerabilities import find_vulnerabilities as node_check
-from node_package_vulnerabilities import simplify_vulnerabilities as node_simplify
 """
 Fetch data from json_output/repo_packages.json and check for vulnerabilities in Node.js and Python packages.
 Format of json_output/repo_packages.json:
@@ -21,8 +20,10 @@ Format of json_output/repo_packages.json:
     ]
 }
 """
-def check_packages():    
+def check_packages():
     vulnerabilities_found = {}
+    node_vulnerabilities = {}
+    python_vulnerabilities = {}
     try:
         with open('json_output/repo_packages.json', 'r') as infile:
             repo_packages = json.load(infile)
@@ -38,10 +39,11 @@ def check_packages():
                     file_contents = file_entry.get('contents', '')
                     vulnerabilities = node_check(file_contents)
                     if vulnerabilities:
-                        vulnerabilities_found[file_path] = vulnerabilities
+                        node_vulnerabilities[file_path] = vulnerabilities
                 elif file_path.endswith('requirements.txt'):
                     pass
-    
+            vulnerabilities_found['node'] = node_vulnerabilities
+            vulnerabilities_found['python'] = python_vulnerabilities
     except FileNotFoundError:
         print("Repository packages file not found. Please scan the repository first.")
     
