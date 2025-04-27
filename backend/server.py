@@ -41,7 +41,7 @@ async def get_vulnerabilities(repo: RepositoryRequest = Body(...)):
             
         vulnerabilities["repositoryUrl"] = repo.url
         vulnerabilities["scanDate"] = os.path.getmtime(vulnerabilities_path)
-
+        vulnerabilities["packagesVulnerabilities"] = check_packages()
     
         return JSONResponse(content=vulnerabilities)
     
