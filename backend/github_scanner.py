@@ -91,7 +91,7 @@ def main():
         description="Fetch allowed files from a GitHub repo and write sanitized contents to JSON."
     )
     parser.add_argument('repo_url', help="e.g. https://github.com/owner/repo")
-    parser.add_argument('-o', '--output', default='repo_files.json',
+    parser.add_argument('-o', '--output', default='/json_files/repo_files.json',
                         help="Output JSON file (default: repo_files.json)")
     args = parser.parse_args()
     try:
