@@ -33,7 +33,8 @@ const securityIssues = [
       id: Int, // id that goes from 1 to n
       path: String,    // Path of the file in the repository
       contents: String, // Contents of the file
-      file_size: Int
+      file_size: Int,
+      "line_count": Int
     }
   ]
 }
@@ -60,5 +61,27 @@ const securityIssues = [
     suggestedFix: String, // Suggested fix for the issue
   }
   ]
+  packagesVulnerabilities: {
+    node: {
+      filepath: {
+        [
+          name: String
+          severity: String
+          isDirect: Bool,
+          range: String,
+          fixAvailable: Bool
+        ]
+      }
+    }
+    python: {
+      filepath: {
+          [
+            package_name: String,
+            analyzed_version: String,
+            vulnerabilities_found: Int
+          ],
+      }
+    }
+  }
 }
 ```

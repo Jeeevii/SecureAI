@@ -1,18 +1,20 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { SecurityIssuesTable } from "@/components/security-issues-table";
-import { SecurityIssue } from "@/components/security-issues-table";
-import { SummaryCards } from "@/components/summary-cards";
-import { ArrowLeft, Download, FileText } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { SecurityIssuesTable, SecurityIssue } from "@/components/security-issues-table"
+import { PackageIssues } from "@/components/package-issues"
+import { SummaryCards } from "@/components/summary-cards"
+import { ArrowLeft, Download, Shield, Package } from "lucide-react"
+import Link from "next/link"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useRouter } from "next/navigation"
 
 // Define the grouping types
 type GroupByType = 'none' | 'severity' | 'file';
 
 export default function ResultsPage() {
+  const [activeTab, setActiveTab] = useState("security")
   const [securityIssues, setSecurityIssues] = useState<SecurityIssue[]>([]);
   const [repositoryUrl, setRepositoryUrl] = useState("");
   const [groupBy, setGroupBy] = useState<GroupByType>('none');
@@ -103,7 +105,6 @@ export default function ResultsPage() {
             </p>
           </div>
           <div className="flex gap-3">
-           
             <Button className="bg-black hover:bg-gray-800 text-white" onClick={downloadRaw}>
               <Download className="h-4 w-4 mr-2" />
               Download Report
@@ -114,32 +115,68 @@ export default function ResultsPage() {
         <SummaryCards issues={securityIssues} />
 
         <div className="mt-8">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-black">Security Issues</h2>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">Group by:</span>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className={`h-8 border-gray-300 ${groupBy === 'severity' ? 'bg-gray-200 border-gray-400' : 'hover:bg-gray-50'}`}
-                onClick={handleGroupBySeverity}
-              >
-                Severity
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className={`h-8 border-gray-300 ${groupBy === 'file' ? 'bg-gray-200 border-gray-400' : 'hover:bg-gray-50'}`}
-                onClick={handleGroupByFile}
-              >
-                File
-              </Button>
+          <Tabs defaultValue="security" value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <div className="border-b border-gray-200">
+              <TabsList className="h-12 bg-transparent p-0 w-full flex justify-start gap-8">
+                <TabsTrigger
+                  value="security"
+                  className="data-[state=active]:border-b-2 data-[state=active]:border-black data-[state=active]:shadow-none rounded-none h-12 px-1"
+                >
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-5 w-5" />
+                    <span>Security Issues</span>
+                  </div>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="packages"
+                  className="data-[state=active]:border-b-2 data-[state=active]:border-black data-[state=active]:shadow-none rounded-none h-12 px-1"
+                >
+                  <div className="flex items-center gap-2">
+                    <Package className="h-5 w-5" />
+                    <span>Package Issues</span>
+                  </div>
+                </TabsTrigger>
+              </TabsList>
             </div>
-          </div>
 
-          <SecurityIssuesTable securityIssues={securityIssues} groupBy={groupBy} />
+            <TabsContent value="security" className="mt-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold text-black">Security Issues</h2>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">Group by:</span>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className={`h-8 border-gray-300 ${groupBy === 'severity' ? 'bg-gray-200 border-gray-400' : 'hover:bg-gray-50'}`}
+                    onClick={handleGroupBySeverity}
+                  >
+                    Severity
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className={`h-8 border-gray-300 ${groupBy === 'file' ? 'bg-gray-200 border-gray-400' : 'hover:bg-gray-50'}`}
+                    onClick={handleGroupByFile}
+                  >
+                    File
+                  </Button>
+                </div>
+              </div>
+              <SecurityIssuesTable securityIssues={securityIssues} groupBy={groupBy} />
+            </TabsContent>
+
+            <TabsContent value="packages" className="mt-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold text-black">Package Vulnerabilities</h2>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">View package vulnerabilities by language</span>
+                </div>
+              </div>
+              <PackageIssues />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
-  );
+  )
 }

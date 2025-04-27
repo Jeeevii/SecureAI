@@ -30,20 +30,20 @@ export default function Home() {
           <h2 className="text-2xl font-bold mb-8 text-center text-black">Detect Common Security Issues</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FeatureCard
-              title="Hardcoded API Keys"
-              description="Find exposed API keys and credentials in your codebase"
+              title="Insecure Code Patterns"
+              description="Identify injection flaws, authentication issues, and access control vulnerabilities"
             />
             <FeatureCard
-              title="Prompt Injection Vulnerabilities"
-              description="Identify potential prompt injection attack vectors"
+              title="Library Misuse and Secrets"
+              description="Detect misuse of libraries, hardcoded secrets, tokens, and keys"
             />
             <FeatureCard
-              title="Insecure Docker Configurations"
-              description="Detect misconfigurations in your Docker setup"
+              title="Misconfigured Environments"
+              description="Analyze dependency configurations, environment variables, and insecure settings"
             />
             <FeatureCard
-              title="Vulnerable Endpoints"
-              description="Discover unprotected API endpoints in your application"
+              title="Pipeline and Malware Risks"
+              description="Identify CI/CD pipeline risks, unsafe scripts, and malware"
             />
           </div>
         </div>

@@ -50,13 +50,13 @@ export default function ScanningPage() {
         if (!data || !data.issues) {
           throw new Error("Invalid response format")
         }
-        
         // Store the vulnerabilities in sessionStorage
         sessionStorage.setItem("vulnerabilities", JSON.stringify(data))
+        sessionStorage.setItem("packagesVulnerabilities", JSON.stringify(data.packagesVulnerabilities || {}))
         
         // Mark scan as complete
         scanCompleteRef.current = true
-        
+        console.log("Vulnerabilities fetched successfully:", data)
         // Set progress to 100% which will trigger redirection
         setProgress(100)
       } catch (error) {

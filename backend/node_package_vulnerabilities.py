@@ -7,50 +7,53 @@ It's in this format
 
 {
   "MobileView/package-lock.json": {
-    "@babel/helpers": {
-      "name": "@babel/helpers",
-      "severity": "moderate",
-      "isDirect": false,
-      "via": [
-        {
-          "source": 1104001,
-          "name": "@babel/helpers",
-          "dependency": "@babel/helpers",
-          "title": "Babel has inefficient RegExp complexity in generated code with .replace when transpiling named capturing groups",
-          "url": "https://github.com/advisories/GHSA-968p-4wvh-cqc8",
-          "severity": "moderate",
-          "cwe": [
-            "CWE-1333"
-          ],
-          "cvss": {
-            "score": 6.2,
-            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
-          },
-          "range": "<7.26.10"
-        }
-      ],
-      "effects": [],
-      "range": "<7.26.10",
-      "nodes": [
-        "node_modules/@babel/helpers"
-      ],
-      "fixAvailable": true
+      "package-lock.json": {
+      "@babel/helpers": {
+        "name": "@babel/helpers",
+        "severity": "moderate",
+        "isDirect": false,
+        "via": [
+          {
+            "source": 1104001,
+            "name": "@babel/helpers",
+            "dependency": "@babel/helpers",
+            "title": "Babel has inefficient RegExp complexity in generated code with .replace when transpiling named capturing groups",
+            "url": "https://github.com/advisories/GHSA-968p-4wvh-cqc8",
+            "severity": "moderate",
+            "cwe": [
+              "CWE-1333"
+            ],
+            "cvss": {
+              "score": 6.2,
+              "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+            },
+            "range": "<7.26.10"
+          }
+        ],
+        "effects": [],
+        "range": "<7.26.10",
+        "nodes": [
+          "node_modules/@babel/helpers"
+        ],
+        "fixAvailable": true
+      }
     }
 }
 
 Convert it to this format:
 {
-  "MobileView/package-lock.json": {
-    "@babel/helpers": {
-      "name": "@babel/helpers",
-      "severity": "moderate",
-      "isDirect": false,
-      "range": "<7.26.10",
-      "fixAvailable": true
+    "MobileView/package-lock.json": {
+      [
+        "name": "@babel/helpers",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<7.26.10",
+        "fixAvailable": true
+      ]
     }
 }
 """
-def find_vulnerabilities(package_lock_content: str):
+def find_vulnerabilities(package_lock_content: str, file_path="package-lock.json"):
     # Step 1: Create a temporary folder
     with tempfile.TemporaryDirectory() as tmpdir:
         # Write the package-lock.json
@@ -71,18 +74,43 @@ def find_vulnerabilities(package_lock_content: str):
             text=True
         )
 
-        # Step 3: Parse and return vulnerabilities
-        audit_data = json.loads(result.stdout)
-        vulnerabilities = audit_data.get("vulnerabilities", {})
-        
-        # Step 4: Wrap the vulnerabilities in a dictionary with the package lock path as key
-        # and then simplify them
-        wrapped_vulnerabilities = {"package-lock.json": vulnerabilities}
-        simplified_vulnerabilities = simplify_vulnerabilities(wrapped_vulnerabilities)
-        
-        return simplified_vulnerabilities
+        # Step 3: Parse vulnerabilities
+        try:
+            audit_data = json.loads(result.stdout)
+            vulnerabilities = audit_data.get("vulnerabilities", {})
+            
+            # Step 4: Convert to the required format 
+            simplified_vulnerabilities = simplify_vulnerabilities(vulnerabilities)
+            
+            return simplified_vulnerabilities
+        except json.JSONDecodeError:
+            print("Error parsing npm audit output")
+            return {}
 
 def simplify_vulnerabilities(vulnerabilities_data):
+    """
+    Convert the detailed vulnerability format to a simplified array format
+    
+    Args:
+        vulnerabilities_data (dict): The original vulnerability data
+        
+    Returns:
+        list: Array of simplified vulnerability objects
+    """
+    simplified_array = []
+    
+    # Process each package in the vulnerabilities data
+    for package_name, package_info in vulnerabilities_data.items():
+        # Extract only the fields we need
+        simplified_array.append({
+            "name": package_info.get("name"),
+            "severity": package_info.get("severity", "unknown"),
+            "isDirect": package_info.get("isDirect", False),
+            "range": package_info.get("range", ""),
+            "fixAvailable": package_info.get("fixAvailable", False)
+        })
+    
+    return simplified_array
     """
     Convert the detailed vulnerability format to a simplified format
     
