@@ -103,7 +103,6 @@ async def analyze_file(file_info):
 
                 if snippet and snippet != "No snippet provided.":
                     line_number = find_snippet_line(contents, snippet)
-                # print("ln:", line_number)
                 if (line_number == "null"):
                     return
                 clean_vuln = {
@@ -129,12 +128,10 @@ async def analyze_file(file_info):
 
     return vulnerabilities
 
-# --- Semaphore wrapper for controlled concurrency ---
 async def sem_task(semaphore, task_func, *args):
     async with semaphore:
         return await task_func(*args)
 
-# --- Main scanning function ---
 async def find_vulnerabilities(input_file, output_file=None):
     if output_file:
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
@@ -145,7 +142,6 @@ async def find_vulnerabilities(input_file, output_file=None):
     all_vulnerabilities = []
     semaphore = asyncio.Semaphore(CONCURRENCY_LIMIT)
 
-    # Split files into large and small, prioritize large files
     large_files = [file_info for file_info in file_data["files"] if len(file_info["contents"].splitlines()) > LARGE_FILE_SIZE_THRESHOLD]
     small_files = [file_info for file_info in file_data["files"] if len(file_info["contents"].splitlines()) <= LARGE_FILE_SIZE_THRESHOLD]
 
@@ -153,7 +149,6 @@ async def find_vulnerabilities(input_file, output_file=None):
         file_vulns = await analyze_file(file_info)
         all_vulnerabilities.extend(file_vulns)
 
-    # Process small files with semaphore-controlled concurrency
     tasks = [sem_task(semaphore, analyze_file, file_info) for file_info in small_files]
     results = await asyncio.gather(*tasks)
 
@@ -181,7 +176,7 @@ def find_snippet_line(contents, snippet):
 
     for i, line in enumerate(content_lines):
         if first_line in line.strip():
-            return i + 1  # Line numbers are 1-based
+            return i + 1
     return None
 
 
