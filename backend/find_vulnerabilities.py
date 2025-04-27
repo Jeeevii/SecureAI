@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import datetime
 from openai import OpenAI
 from dotenv import load_dotenv
 
@@ -15,12 +16,13 @@ if not api_key:
 # Initialize OpenAI client
 client = OpenAI(api_key=api_key)
 
-def analyze_file_for_vulnerabilities(file_data):
+def analyze_file_for_vulnerabilities(file_data, repository_name="unknown_repository"):
     """
     Analyze a single file for vulnerabilities using an LLM.
     
     Args:
         file_data (dict): File data containing id, path, and contents
+        repository_name (str): Name of the repository being analyzed
         
     Returns:
         list: List of vulnerability dictionaries
@@ -31,6 +33,9 @@ def analyze_file_for_vulnerabilities(file_data):
     
     # Split contents into lines for better line number identification
     lines = contents.split('\n')
+    
+    # Get current date for scan date
+    scan_date = datetime.datetime.now().isoformat()
     
     # Construct prompt for the LLM
     prompt = f"""
@@ -57,13 +62,23 @@ def analyze_file_for_vulnerabilities(file_data):
     5. The exact code snippet where the vulnerability occurs
     6. A suggested fix for the vulnerability
     
-    Format your response as a JSON array containing objects with the following fields:
-    - lineNumber: int
-    - issueType: string
-    - severity: string
-    - description: string
-    - codeSnippet: string
-    - suggestedFix: string
+    Format your response as a JSON object with the following structure:
+    {{
+      "repositoryName": "{repository_name}",
+      "scanDate": "{scan_date}",
+      "issues": [
+        {{
+          "fileName": "{file_path}",
+          "lineNumber": int,
+          "issueType": string,
+          "severity": string,
+          "description": string,
+          "codeSnippet": string,
+          "suggestedFix": string
+        }},
+        // Additional issues as needed
+      ]
+    }}
     
     Only include actual security concerns, not code quality issues unless they directly impact security.
     """
@@ -86,23 +101,27 @@ def analyze_file_for_vulnerabilities(file_data):
         # Try to parse any JSON in the response
         vulnerabilities = []
         try:
-            # Look for JSON array in the response
-            json_match = re.search(r'\[[\s\S]*\]', analysis_result)
+            # Look for JSON object in the response
+            json_match = re.search(r'\{[\s\S]*\}', analysis_result)
             if json_match:
                 json_str = json_match.group(0)
-                raw_vulnerabilities = json.loads(json_str)
+                parsed_result = json.loads(json_str)
                 
-                # Format vulnerabilities according to expected output
-                for vuln in raw_vulnerabilities:
-                    vulnerabilities.append({
-                        "fileName": file_path,
-                        "lineNumber": vuln.get("lineNumber", 0),
-                        "issueType": vuln.get("issueType", "Unknown"),
-                        "severity": vuln.get("severity", "Medium"),
-                        "description": vuln.get("description", ""),
-                        "codeSnippet": vuln.get("codeSnippet", ""),
-                        "suggestedFix": vuln.get("suggestedFix", "")
-                    })
+                # Extract issues from the parsed result
+                if "issues" in parsed_result and isinstance(parsed_result["issues"], list):
+                    raw_vulnerabilities = parsed_result["issues"]
+                    
+                    # Format vulnerabilities according to expected output
+                    for vuln in raw_vulnerabilities:
+                        vulnerabilities.append({
+                            "fileName": vuln.get("fileName", file_path),
+                            "lineNumber": vuln.get("lineNumber", 0),
+                            "issueType": vuln.get("issueType", "Unknown"),
+                            "severity": vuln.get("severity", "Medium"),
+                            "description": vuln.get("description", ""),
+                            "codeSnippet": vuln.get("codeSnippet", ""),
+                            "suggestedFix": vuln.get("suggestedFix", "")
+                        })
             
         except json.JSONDecodeError:
             # If JSON parsing fails, try to extract information using regex
@@ -129,47 +148,70 @@ def analyze_file_for_vulnerabilities(file_data):
                     "suggestedFix": suggested_fix
                 })
         
-        return vulnerabilities
+        return vulnerabilities, repository_name, scan_date
     
     except Exception as e:
         print(f"Error analyzing {file_path}: {str(e)}")
-        return []
+        return [], repository_name, scan_date
 
-def find_vulnerabilities(input_file, output_file=None):
+def find_vulnerabilities(input_file, output_file=None, repository_name=None):
     """
     Process the input file containing code files and find vulnerabilities in each file.
     
     Args:
         input_file (str): Path to the input JSON file
         output_file (str, optional): Path to the output file. If None, print to stdout.
+        repository_name (str, optional): Name of the repository being analyzed
         
     Returns:
-        list: List of vulnerabilities found
+        dict: Dictionary with repository name, scan date, and issues found
     """
     # Load the JSON file
     with open(input_file, 'r') as f:
         file_data = json.load(f)
     
+    # Extract repository name from input file if not provided
+    if not repository_name:
+        # Try to get repository name from the path
+        input_path_parts = os.path.abspath(input_file).split(os.path.sep)
+        if 'SecureAI' in input_path_parts:
+            repository_name = input_path_parts[input_path_parts.index('SecureAI') - 1]
+        else:
+            repository_name = "unknown_repository"
+    
     all_vulnerabilities = []
+    scan_date = datetime.datetime.now().isoformat()
     
     # Process each file in the input
     for file_info in file_data:
         print(f"Analyzing file: {file_info['path']}")
-        vulnerabilities = analyze_file_for_vulnerabilities(file_info)
+        vulnerabilities, repo_name, current_scan_date = analyze_file_for_vulnerabilities(file_info, repository_name)
         all_vulnerabilities.extend(vulnerabilities)
+        # Use the first non-empty repository name and scan date
+        if repo_name != "unknown_repository":
+            repository_name = repo_name
+        if scan_date == datetime.datetime.now().isoformat() and current_scan_date != scan_date:
+            scan_date = current_scan_date
     
     # Assign unique IDs to vulnerabilities
     for i, vuln in enumerate(all_vulnerabilities, 1):
         vuln["id"] = i
     
+    # Format the results according to the expected output
+    result = {
+        "repositoryName": repository_name,
+        "scanDate": scan_date,
+        "issues": all_vulnerabilities
+    }
+    
     # Output the results
     if output_file:
         with open(output_file, 'w') as f:
-            json.dump(all_vulnerabilities, f, indent=2)
+            json.dump(result, f, indent=2)
     else:
-        print(json.dumps(all_vulnerabilities, indent=2))
+        print(json.dumps(result, indent=2))
     
-    return all_vulnerabilities
+    return result
 
 def main():
     """Main function to find vulnerabilities in test.json"""
