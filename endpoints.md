@@ -42,7 +42,10 @@ const securityIssues = [
 - **Output**: JSON in the following format:
 
 ```javascript
-[
+{
+  repositoryName: String, 
+  scanDate: String
+  issues: [
   {
     id: Int,              // Unique identifier for the issue
     fileName: String,     // Name of the file where the issue is found
@@ -53,5 +56,6 @@ const securityIssues = [
     codeSnippet: String,  // Code snippet where the issue occurs
     suggestedFix: String, // Suggested fix for the issue
   }
-]
+  ]
+}
 ```

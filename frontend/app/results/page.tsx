@@ -2,18 +2,47 @@
 
 import { Button } from "@/components/ui/button";
 import { SecurityIssuesTable } from "@/components/security-issues-table";
-import { SecurityIssue, securityIssues } from "@/components/security-issues-table"; // Import securityIssues from here
+import { SecurityIssue } from "@/components/security-issues-table";
 import { SummaryCards } from "@/components/summary-cards";
 import { ArrowLeft, Download, FileText } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ResultsPage() {
+  const [securityIssues, setSecurityIssues] = useState<SecurityIssue[]>([]);
+  const [repositoryUrl, setRepositoryUrl] = useState("");
+  const router = useRouter();
+
+  useEffect(() => {
+    // Get vulnerabilities from sessionStorage (set during the scanning process)
+    const vulnerabilitiesStr = sessionStorage.getItem("vulnerabilities");
+    const repoUrl = sessionStorage.getItem("repositoryUrl");
+    
+    if (!vulnerabilitiesStr || !repoUrl) {
+      // If no data found, redirect to home page
+      router.push("/");
+      return;
+    }
+    
+    try {
+      const vulnerabilities = JSON.parse(vulnerabilitiesStr);
+      // Extract security issues from the vulnerabilities data
+      if (vulnerabilities.issues && Array.isArray(vulnerabilities.issues)) {
+        setSecurityIssues(vulnerabilities.issues);
+      }
+      setRepositoryUrl(repoUrl);
+    } catch (error) {
+      console.error("Error parsing vulnerabilities:", error);
+      // Handle error - maybe redirect or show an error message
+    }
+  }, [router]);
+
   const downloadRaw = () => {
     let textContent = "Security Issues Report\n\n";
     textContent += "ID | File | Issue Type | Severity | Line Number\n";
     textContent += "--------------------------------------------\n";
 
-    // We directly use the imported `securityIssues` here
     securityIssues.forEach(issue => {
       textContent += `${issue.id} | ${issue.fileName} | ${issue.issueType} | ${issue.severity} | ${issue.lineNumber}\n`;
       textContent += `Description: ${issue.description}\n`;
@@ -33,6 +62,20 @@ export default function ResultsPage() {
     document.body.removeChild(link);
   };
 
+  // Extract repository name from URL
+  const getRepoName = (url: string) => {
+    try {
+      const urlObj = new URL(url);
+      const pathParts = urlObj.pathname.split('/').filter(Boolean);
+      if (pathParts.length >= 2) {
+        return `${pathParts[0]}/${pathParts[1]}`;
+      }
+      return url;
+    } catch (e) {
+      return url;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
@@ -44,7 +87,7 @@ export default function ResultsPage() {
             </Link>
             <h1 className="text-3xl font-bold text-black">Security Scan Results</h1>
             <p className="text-gray-600 mt-1">
-              Repository: <span className="font-medium">username/ai-deployment-project</span>
+              Repository: <span className="font-medium">{getRepoName(repositoryUrl)}</span>
             </p>
           </div>
           <div className="flex gap-3">
@@ -59,7 +102,7 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        <SummaryCards />
+        <SummaryCards issues={securityIssues} />
 
         <div className="mt-8">
           <div className="flex justify-between items-center mb-4">
