@@ -77,6 +77,7 @@ class RepoFileFetcher:
     @staticmethod
     def _sanitize_content(text):
         # return text.replace('\r\n', ' ').replace('\n', ' ').replace('\r', ' ')
+
         return text
 
     def fetch_file_data(self, idx, item):
@@ -90,11 +91,21 @@ class RepoFileFetcher:
             raw = self._get_raw_content(path)
             content = self._sanitize_content(raw)
             file_size = self._get_file_size(path)
+            line_count = content.count('\n') + (not content.endswith('\n') and len(content) > 0)
             print("Getting: ", path)
         except requests.HTTPError:
             content = ''
             file_size = 0
-        return {'id': idx, 'path': path, 'contents': content, 'file_size': file_size}
+            line_count = 0
+
+        return {
+            'id': idx,
+            'path': path,
+            'contents': content,
+            'file_size': file_size,
+            'line_count': line_count
+        }
+
 
     def fetch(self):
         files = self._get_all_files()
