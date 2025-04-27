@@ -1,0 +1,17 @@
+{
+  "num_files": 2,
+  "files": [
+    {
+      "id": 5,
+      "path": "backend/requirements.txt",
+      "contents": "blinker==1.8.1\r\nclick==8.1.7\r\ncolorama==0.4.6\r\nFlask==3.0.3\r\nFlask-Cors==4.0.0\r\nitsdangerous==2.2.0\r\nJinja2==3.1.3\r\nMarkupSafe==2.1.5\r\nWerkzeug==3.0.2\r\n",
+      "file_size": 180
+    },
+    {
+      "id": 11,
+      "path": "frontend/package.json",
+      "contents": "{\n  \"name\": \"frontend\",\n  \"private\": true,\n  \"version\": \"0.0.0\",\n  \"type\": \"module\",\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"vite build\",\n    \"lint\": \"eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0\",\n    \"preview\": \"vite preview\"\n  },\n  \"dependencies\": {\n    \"axios\": \"^1.6.8\",\n    \"react\": \"^18.2.0\",\n    \"react-dom\": \"^18.2.0\",\n    \"react-router-dom\": \"^6.23.0\"\n  },\n  \"devDependencies\": {\n    \"@types/react\": \"^18.2.66\",\n    \"@types/react-dom\": \"^18.2.22\",\n    \"@vitejs/plugin-react\": \"^4.2.1\",\n    \"eslint\": \"^8.57.0\",\n    \"eslint-plugin-react\": \"^7.34.1\",\n    \"eslint-plugin-react-hooks\": \"^4.6.0\",\n    \"eslint-plugin-react-refresh\": \"^0.4.6\",\n    \"vite\": \"^5.2.0\"\n  }\n}\n",
+      "file_size": 334
+    }
+  ]
+}
