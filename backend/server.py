@@ -8,7 +8,8 @@ from pydantic import BaseModel
 from github_scanner import RepoFileFetcher
 from find_vulnerabilities import find_vulnerabilities
 from check_packages import check_packages
-from github_repo_packages import RepoFileFetcher
+from github_repo_packages import RepoFileFetcher as PackageRepoFileFetcher
+
 class RepositoryRequest(BaseModel):
     url: str
 
@@ -31,6 +32,10 @@ async def get_vulnerabilities(repo: RepositoryRequest = Body(...)):
         fetcher = RepoFileFetcher(repo.url, output=temp_files_json)
         fetcher.run()
         
+        packages_json = "json_output/repo_packages.json"
+        package_fetcher = PackageRepoFileFetcher(repo.url, output=packages_json)
+        package_fetcher.run()
+        
         vulnerabilities_path = "json_output/vulnerabilities.json"
         await find_vulnerabilities(temp_files_json, vulnerabilities_path)
         
@@ -39,12 +44,12 @@ async def get_vulnerabilities(repo: RepositoryRequest = Body(...)):
             
         with open(vulnerabilities_path, 'r') as file:
             vulnerabilities = json.load(file)
-            
+        
         vulnerabilities["repositoryUrl"] = repo.url
         vulnerabilities["scanDate"] = os.path.getmtime(vulnerabilities_path)
-
-        RepoFileFetcher(repo.url, output="json_output/repo_packages.json").run()
-        vulnerabilities["packagesVulnerabilities"] = check_packages()
+        
+        package_vulnerabilities = check_packages()
+        vulnerabilities["packagesVulnerabilities"] = package_vulnerabilities
     
         return JSONResponse(content=vulnerabilities)
     
