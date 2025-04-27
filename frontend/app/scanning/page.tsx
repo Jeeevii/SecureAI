@@ -18,7 +18,6 @@ export default function ScanningPage() {
     "Analyzing repository structure...",
     "Examining package dependencies...",
     "Checking for hardcoded credentials...",
-    "Scanning API endpoints for vulnerabilities...",
     "Checking input validation patterns...",
     "Analyzing prompt handling for injection risks...",
     "Generating security report...",
