@@ -3,7 +3,9 @@ import argparse
 import requests
 import json
 import os
+# import time
 from urllib.parse import urlparse
+from concurrent.futures import ThreadPoolExecutor
 
 class RepoFileFetcher:
     DEFAULT_EXTENSIONS = {
@@ -68,32 +70,49 @@ class RepoFileFetcher:
         r.raise_for_status()
         return r.text
 
+    def _get_file_size(self, path):
+        raw_url = f"https://raw.githubusercontent.com/{self.owner}/{self.repo}/{self.branch}/{path}"
+        r = self.session.head(raw_url)
+        r.raise_for_status()
+        return int(r.headers.get('Content-Length', 0))
+
     @staticmethod
     def _sanitize_content(text):
         return text.replace('\r\n', ' ').replace('\n', ' ').replace('\r', ' ')
 
+    def fetch_file_data(self, idx, item):
+        path = item.get('path')
+
+        if not self._is_allowed(path):
+            print("Skipped: ", path)
+            return None
+        
+        try:
+            raw = self._get_raw_content(path)
+            content = self._sanitize_content(raw)
+            file_size = self._get_file_size(path)
+            print("Getting: ", path)
+        except requests.HTTPError:
+            content = ''
+            file_size = 0
+        
+        return {'id': idx, 'path': path, 'contents': content, 'file_size': file_size}
+
     def fetch(self):
         files = self._get_all_files()
         data = []
-        idx = 1
-        for item in files:
-            path = item.get('path')
-            
-            if not self._is_allowed(path):
-                print("Skipped: ", path)
-                continue
-            try:
-                raw = self._get_raw_content(path)
-                content = self._sanitize_content(raw)
-                print("Getting: ", path)
-            except requests.HTTPError:
-                content = ''
-            data.append({'id': idx, 'path': path, 'contents': content})
-            idx += 1
+
+        with ThreadPoolExecutor() as executor:
+            futures = [executor.submit(self.fetch_file_data, idx + 1, item) for idx, item in enumerate(files)]
+            for future in futures:
+                result = future.result()
+                if result:
+                    data.append(result)
+
         return data
 
     def write_json(self, data):
-        num_files = len(data)  # Calculate the number of files
+        num_files = len(data)
         json_data = {
             "num_files": num_files,
             "files": data
@@ -103,17 +122,19 @@ class RepoFileFetcher:
             f.write(raw_json)
 
     def run(self):
+        # start_time = time.time()
         data = self.fetch()
         self.write_json(data)
+        # elapsed_time = time.time() - start_time  # Calculate elapsed time
         print(f"Wrote {len(data)} entries to {self.output}")
-
+        # print(f"Total time taken: {elapsed_time:.2f} seconds")
 
 def main():
     parser = argparse.ArgumentParser(
         description="Fetch allowed files from a GitHub repo and write sanitized contents to JSON."
     )
     parser.add_argument('repo_url', help="e.g. https://github.com/owner/repo")
-    parser.add_argument('-o', '--output', default='/json_files/repo_files.json',
+    parser.add_argument('-o', '--output', default='repo_files.json',
                         help="Output JSON file (default: repo_files.json)")
     args = parser.parse_args()
     try:
