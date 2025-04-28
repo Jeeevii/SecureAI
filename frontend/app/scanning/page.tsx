@@ -11,7 +11,6 @@ export default function ScanningPage() {
   const statusRef = useRef<HTMLDivElement>(null)
   const scanCompleteRef = useRef(false)
 
-  // GitHub scanning status messages
   const scanningStatuses = [
     "Connecting to GitHub API...",
     "Fetching repository metadata...",
@@ -24,8 +23,7 @@ export default function ScanningPage() {
     "Generating security report...",
   ]
 
-  // Make the actual API call to the backend
-  useEffect(() => {
+   useEffect(() => {
     const fetchVulnerabilities = async () => {
       try {
         const repositoryUrl = sessionStorage.getItem("repositoryUrl")
@@ -33,7 +31,7 @@ export default function ScanningPage() {
           router.push("/")
           return
         }
-
+  
         const response = await fetch("http://localhost:8000/vulnerabilities", {
           method: "POST",
           headers: {
@@ -41,56 +39,41 @@ export default function ScanningPage() {
           },
           body: JSON.stringify({ url: repositoryUrl }),
         })
-
+  
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
-
+  
         const data = await response.json()
         if (!data || !data.issues) {
           throw new Error("Invalid response format")
         }
-        // Store the vulnerabilities in sessionStorage
         sessionStorage.setItem("vulnerabilities", JSON.stringify(data))
         sessionStorage.setItem("packagesVulnerabilities", JSON.stringify(data.packagesVulnerabilities || {}))
-        
-        // Store malware data properly
-        // Check if malware data is available in the response
-        if (data.malware) {
-          sessionStorage.setItem("malware", JSON.stringify(data.malware))
-        } else {
-          // If there's no specific malware field, create an empty array
-          sessionStorage.setItem("malware", JSON.stringify([]))
-        }
-        
-        // Mark scan as complete
+        sessionStorage.setItem("malware", JSON.stringify((data.malware) || []))
+  
         scanCompleteRef.current = true
         console.log("Vulnerabilities fetched successfully:", data)
-        // Set progress to 100% which will trigger redirection
         setProgress(100)
       } catch (error) {
         console.error("Error fetching vulnerabilities:", error)
-        // Handle error - maybe redirect to an error page or show an error message
       }
     }
-
+  
     fetchVulnerabilities()
   }, [router])
 
-  // Typing effect for status message
   useEffect(() => {
     let currentIndex = 0
     let interval: NodeJS.Timeout
 
     const updateStatus = () => {
-      // Change status message every ~6% of progress
       const newIndex = Math.min(Math.floor(progress / 7), scanningStatuses.length - 1)
 
       if (newIndex !== currentIndex) {
         currentIndex = newIndex
         setCurrentStatus(scanningStatuses[currentIndex])
 
-        // Add fade effect when changing status
         if (statusRef.current) {
           statusRef.current.classList.add("animate-fade-in")
           setTimeout(() => {
@@ -106,24 +89,19 @@ export default function ScanningPage() {
     return () => clearInterval(interval)
   }, [progress, scanningStatuses])
 
-  // Progress bar animation
   useEffect(() => {
-    // Start with slower progress that will speed up when the scan completes
     const timer = setInterval(() => {
       setProgress((prevProgress) => {
         if (prevProgress >= 100) {
           clearInterval(timer)
-          // Add a small delay before redirecting to results page
           setTimeout(() => router.push("/results"), 1000)
           return 100
         }
         
-        // If scan is complete, jump to 100%
         if (scanCompleteRef.current) {
           return 100
         }
         
-        // Otherwise progress gradually up to 90%
         const increment = prevProgress < 30 ? 0.7 : 
                           prevProgress < 60 ? 0.5 : 
                           prevProgress < 85 ? 0.3 : 0.1
@@ -136,7 +114,6 @@ export default function ScanningPage() {
     }
   }, [router])
 
-  // Get the appropriate icon based on current progress
   const getCurrentIcon = () => {
     if (progress < 20) return <GitBranch className="h-6 w-6 text-gray-600" />
     if (progress < 40) return <GitFork className="h-6 w-6 text-gray-600" />
