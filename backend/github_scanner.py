@@ -7,7 +7,6 @@ import hashlib
 from urllib.parse import urlparse
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-
 NORMAL_EXTENSIONS = {
     '.py', '.pyx', '.pyd', '.pyi', '.pyc',
     '.rs', '.rlib',
@@ -22,11 +21,45 @@ NORMAL_EXTENSIONS = {
     '.sh', '.bash', '.zsh', '.fish',
     '.yaml', '.yml', '.toml', '.xml', '.ini', '.config',
     'Dockerfile', '.dockerfile', '.dockerignore',
-    '.sql', '.graphql', '.proto'
+    '.sql', '.graphql', '.proto',
+    '.scala', '.sbt',          
+    '.lua',                    
+    '.r', '.rmd',               
+    '.dart',                    
+    '.ex', '.exs',             
+    '.hs', '.lhs',               
+    '.pl', '.pm',               
+    '.jsp', '.aspx', '.cshtml',  
+    '.ipynb',                   
+    '.pas', '.pp',              
+    'Makefile',                  
 }
-BINARY_EXTENSIONS = {'.exe', '.dll', '.sys', '.bin', '.dat', '.msi', '.apk', '.so', '.dmg'}
-IGNORE_DIRS = {'node_modules', '.git', '.md', '.pdf', '.css', '.json', '.gitignore', '.gitattributes'}
 
+BINARY_EXTENSIONS = {
+    '.exe', '.dll', '.sys', '.bin', '.dat', '.msi', '.apk', '.so', '.dmg',
+    '.jar', '.war',            
+    '.wasm',                     
+    '.pyc',                     
+    '.class',                                
+    '.iso', '.img',              
+}
+
+IGNORE_DIRS = {
+    'node_modules', '.git', 'tests', 'static', 'dist', 'build', 
+    'vendor', 'bower_components', 'coverage', '__pycache__', 
+    '.venv', 'venv', 'env',      
+    '.idea', '.vscode',          
+    'target', 'out',            
+    'logs', 'log',             
+    'tmp', 'temp',               
+    'cache', '.cache',           
+    'assets', 'public/assets',   
+    'terraform.tfstate.d',       
+    '.pytest_cache',             
+    '.next', '.nuxt'             
+}
+
+MAX_LINE_COUNT = 8000
 def sha256_file(url, hash_algorithm="sha256"):
     try:
         with requests.get(url, stream=True) as response:
@@ -108,6 +141,12 @@ class RepoFileFetcher:
             raw = self._fetch_text_content(path)
             file_size = self._fetch_file_size(path)
             line_count = raw.count('\n') + (not raw.endswith('\n') and len(raw) > 0)
+            
+            # Skip files with more than MAX_LINE_COUNT lines
+            if line_count > MAX_LINE_COUNT:
+                print(f"[!] Skipping large file: {path} ({line_count} lines)")
+                return None
+                
             print(f"[+] Normal file: {path}")
         except requests.HTTPError:
             return None
