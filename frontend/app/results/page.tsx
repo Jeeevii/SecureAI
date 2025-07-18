@@ -174,15 +174,6 @@ export default function ResultsPage() {
                     <span>Package Issues</span>
                   </div>
                 </TabsTrigger>
-                <TabsTrigger
-                  value="malware"
-                  className="data-[state=active]:border-b-2 data-[state=active]:border-black data-[state=active]:shadow-none rounded-none h-12 px-1"
-                >
-                  <div className="flex items-center gap-2">
-                    <FileWarning className="h-5 w-5" />
-                    <span>Malware Detection</span>
-                  </div>
-                </TabsTrigger>
               </TabsList>
             </div>
 
